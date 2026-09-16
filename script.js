@@ -16,7 +16,7 @@
       title: "Rutejakten",
       heading: "Rutejakten",
       intro:
-        "Et rutenett viser en kort sekvens av ruter som lyser opp, én om gangen. Trykk rutene i samme rekkefølge. Klarer du det, får du poeng og sekvensen blir én rute lengre. Trykker du feil, vises den riktige sekvensen, og du prøver samme nivå igjen. Ingen tidsfrist. Du kan også spille med tallene 1–9 på tastaturet, med samme plassering som på numerisk tastatur.",
+        "Et rutenett viser en kort sekvens av ruter som lyser opp, én om gangen. Trykk rutene i samme rekkefølge. Klarer du det, får du poeng og sekvensen blir én rute lengre. Trykker du feil, vises den riktige sekvensen, og du prøver samme nivå igjen. Ingen tidsfrist. Du kan også spille med tallene 1–9 på tastaturet (samme plassering som på numerisk tastatur) eller med QWE/ASD/ZXC.",
       level: "Nivå",
       score: "Poeng",
       restart: "Start på nytt",
@@ -43,7 +43,7 @@
       title: "Grid Hunt",
       heading: "Grid Hunt",
       intro:
-        "A grid shows a short sequence of tiles lighting up, one at a time. Press the tiles in the same order. If you get it right, you score a point and the sequence grows by one tile. If you press the wrong tile, the correct sequence is shown and you try the same level again. No time limit. You can also play with the number keys 1–9, using the same layout as a numeric keypad.",
+        "A grid shows a short sequence of tiles lighting up, one at a time. Press the tiles in the same order. If you get it right, you score a point and the sequence grows by one tile. If you press the wrong tile, the correct sequence is shown and you try the same level again. No time limit. You can also play with the number keys 1–9 (same layout as a numeric keypad) or with QWE/ASD/ZXC.",
       level: "Level",
       score: "Score",
       restart: "Restart",
@@ -397,12 +397,43 @@
     Numpad3: 8,
   };
 
+  const LETTER_CODE_TO_INDEX = {
+    KeyQ: 0,
+    KeyW: 1,
+    KeyE: 2,
+    KeyA: 3,
+    KeyS: 4,
+    KeyD: 5,
+    KeyZ: 6,
+    KeyX: 7,
+    KeyC: 8,
+  };
+
+  const LETTER_KEY_TO_INDEX = {
+    q: 0,
+    w: 1,
+    e: 2,
+    a: 3,
+    s: 4,
+    d: 5,
+    z: 6,
+    x: 7,
+    c: 8,
+  };
+
   function indexFromKey(event) {
     if (Object.prototype.hasOwnProperty.call(NUMPAD_CODE_TO_INDEX, event.code)) {
       return NUMPAD_CODE_TO_INDEX[event.code];
     }
     if (Object.prototype.hasOwnProperty.call(DIGIT_TO_INDEX, event.key)) {
       return DIGIT_TO_INDEX[event.key];
+    }
+    if (Object.prototype.hasOwnProperty.call(LETTER_CODE_TO_INDEX, event.code)) {
+      return LETTER_CODE_TO_INDEX[event.code];
+    }
+    var letter = String(event.key).toLowerCase();
+    if (Object.prototype.hasOwnProperty.call(LETTER_KEY_TO_INDEX, letter)) {
+      return LETTER_KEY_TO_INDEX[letter];
     }
     return null;
   }
