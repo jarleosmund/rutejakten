@@ -26,7 +26,7 @@
       yourTurn: "Din tur. Trykk rutene i samme rekkefølge.",
       correct: "Riktig!",
       correctNext: "Riktig! Se den nye, lengre sekvensen.",
-      wrong: "Feil. Her er den riktige sekvensen. Prøv samme nivå igjen.",
+      wrong: "Feil. Trykk «Gjenta» for å se sekvensen igjen.",
       statusAria: "Spillstatus",
       boardAria: "Rutenett",
       tile: "Rute",
@@ -54,7 +54,7 @@
       yourTurn: "Your turn. Press the tiles in the same order.",
       correct: "Correct!",
       correctNext: "Correct! Watch the new, longer sequence.",
-      wrong: "Wrong. Here is the correct sequence. Try the same level again.",
+      wrong: "Wrong. Press “Repeat” to see the sequence again.",
       statusAria: "Game status",
       boardAria: "Grid",
       tile: "Tile",
@@ -95,6 +95,7 @@
   let playerStep = 0;
   let score = 0;
   let acceptingInput = false;
+  let awaitingRepeat = false;
   let roundToken = 0;
 
   function delay(ms) {
@@ -255,10 +256,13 @@
     scoreEl.textContent = String(score);
   }
 
-  function setCellsEnabled(enabled) {
+  function setBoardEnabled(enabled) {
     cells.forEach(function (cell) {
       cell.disabled = !enabled;
     });
+  }
+
+  function setRepeatEnabled(enabled) {
     repeatBtn.disabled = !enabled;
   }
 
@@ -283,6 +287,7 @@
     playerStep = 0;
     score = 0;
     acceptingInput = false;
+    awaitingRepeat = false;
     for (let i = 0; i < START_LENGTH; i += 1) {
       growSequence();
     }
@@ -300,8 +305,10 @@
   async function playSequence(key, kind) {
     const token = roundToken;
     acceptingInput = false;
+    awaitingRepeat = false;
     playerStep = 0;
-    setCellsEnabled(false);
+    setBoardEnabled(false);
+    setRepeatEnabled(false);
     clearCellStates();
     setMessage(key || "watch", kind);
     updateStats();
@@ -328,7 +335,8 @@
       return;
     }
 
-    setCellsEnabled(true);
+    setBoardEnabled(true);
+    setRepeatEnabled(true);
     acceptingInput = true;
     setMessage("yourTurn");
   }
@@ -341,11 +349,16 @@
   }
 
   function onWrongPress() {
-    playSequence("wrong", "is-warn");
+    acceptingInput = false;
+    awaitingRepeat = true;
+    playerStep = 0;
+    setBoardEnabled(false);
+    setRepeatEnabled(true);
+    setMessage("wrong", "is-warn");
   }
 
   function repeatSequence() {
-    if (!acceptingInput) {
+    if (!acceptingInput && !awaitingRepeat) {
       return;
     }
     score -= 1;
@@ -362,8 +375,6 @@
     flashCell(index, "is-press", 180);
 
     if (index !== sequence[playerStep]) {
-      acceptingInput = false;
-      setCellsEnabled(false);
       playWrong();
       onWrongPress();
       return;
@@ -375,7 +386,8 @@
     }
     if (playerStep === sequence.length) {
       acceptingInput = false;
-      setCellsEnabled(false);
+      setBoardEnabled(false);
+      setRepeatEnabled(false);
       playSuccess();
       setMessage("correct", "is-good");
       await delay(500);
@@ -528,6 +540,7 @@
   applyTheme(readStore(THEME_KEY, "dark"));
   applyLanguage(readStore(LANG_KEY, "en"));
   applySound(readStore(SOUND_KEY, "on"));
-  setCellsEnabled(false);
+  setBoardEnabled(false);
+  setRepeatEnabled(false);
   updateStats();
 })();
