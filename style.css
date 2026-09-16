@@ -206,27 +206,12 @@ body {
   display: none;
 }
 
-#sound-toggle[aria-pressed="false"] .pref-btn-icon-on,
-#voice-toggle[aria-pressed="false"] .pref-btn-icon-on {
+#sound-toggle[aria-pressed="false"] .pref-btn-icon-on {
   display: none;
 }
 
-#sound-toggle[aria-pressed="false"] .pref-btn-icon-off,
-#voice-toggle[aria-pressed="false"] .pref-btn-icon-off {
+#sound-toggle[aria-pressed="false"] .pref-btn-icon-off {
   display: inline-flex;
-}
-
-.pref-btn:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-.voice-hint {
-  margin: 0;
-  padding: 0.1rem 0.2rem 0.15rem;
-  font-size: 0.92rem;
-  color: var(--muted);
-  line-height: 1.35;
 }
 
 .pref-btn + .pref-btn {

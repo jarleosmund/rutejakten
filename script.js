@@ -7,42 +7,6 @@
   const LANG_KEY = "rutejakten-lang";
   const THEME_KEY = "rutejakten-theme";
   const SOUND_KEY = "rutejakten-sound";
-  const VOICE_KEY = "rutejakten-voice";
-  const SPEAK_WORDS = {
-    no: {
-      1: "en",
-      2: "to",
-      3: "tre",
-      4: "fire",
-      5: "fem",
-      6: "seks",
-      7: "syv",
-      8: "åtte",
-      9: "ni",
-    },
-    en: {
-      1: "one",
-      2: "two",
-      3: "three",
-      4: "four",
-      5: "five",
-      6: "six",
-      7: "seven",
-      8: "eight",
-      9: "nine",
-    },
-  };
-  const SPEECH_ALIASES = {
-    1: ["1", "one", "en", "ett", "ein"],
-    2: ["2", "two", "to", "too"],
-    3: ["3", "three", "tre"],
-    4: ["4", "four", "fire", "for"],
-    5: ["5", "five", "fem"],
-    6: ["6", "six", "seks"],
-    7: ["7", "seven", "sju", "syv"],
-    8: ["8", "eight", "åtte", "atte", "otte"],
-    9: ["9", "nine", "ni"],
-  };
   const CELL_FREQS = [
     440.0, 523.25, 587.33, 293.66, 329.63, 392.0, 196.0, 220.0, 261.63,
   ];
@@ -74,14 +38,6 @@
       soundOff: "Lyd av",
       prefsAria: "Språk og utseende",
       settings: "Innstillinger",
-      voiceGroup: "Stemme",
-      voiceOn: "Stemme på",
-      voiceOff: "Stemme av",
-      yourTurnVoice: "Din tur. Si tallet, eller trykk ruten.",
-      voiceDenied:
-        "Mikrofonen er ikke tilgjengelig. Du kan fortsatt spille med klikk eller tastatur.",
-      voiceUnsupported:
-        "Stemme støttes ikke i denne nettleseren. Du kan spille med klikk eller tastatur.",
     },
     en: {
       title: "Grid Hunt",
@@ -109,14 +65,6 @@
       soundOff: "Sound off",
       prefsAria: "Language and appearance",
       settings: "Settings",
-      voiceGroup: "Voice",
-      voiceOn: "Voice on",
-      voiceOff: "Voice off",
-      yourTurnVoice: "Your turn. Say the number, or press the tile.",
-      voiceDenied:
-        "The microphone is not available. You can still play with clicks or the keyboard.",
-      voiceUnsupported:
-        "Voice is not supported in this browser. You can play with clicks or the keyboard.",
     },
   };
 
@@ -130,20 +78,12 @@
   const themeLightBtn = document.getElementById("theme-light");
   const themeDarkBtn = document.getElementById("theme-dark");
   const soundToggleBtn = document.getElementById("sound-toggle");
-  const voiceToggleBtn = document.getElementById("voice-toggle");
-  const voiceHintEl = document.getElementById("voice-hint");
   const settingsToggleBtn = document.getElementById("settings-toggle");
   const settingsPanel = document.getElementById("settings-panel");
-  function getSpeechRec() {
-    return window.SpeechRecognition || window.webkitSpeechRecognition || null;
-  }
 
   let lang = "no";
   let theme = "dark";
   let soundOn = true;
-  let voiceOn = false;
-  let recognizer = null;
-  let listening = false;
   let audioCtx = null;
   let masterGain = null;
   let messageKey = "idle";
@@ -202,15 +142,6 @@
     setPressed(langNoBtn, lang === "no");
     setPressed(langEnBtn, lang === "en");
     updateSoundButton();
-    updateVoiceButton();
-    if (voiceHintEl && !voiceHintEl.hidden) {
-      voiceHintEl.textContent = t(
-        getSpeechRec() ? "voiceDenied" : "voiceUnsupported"
-      );
-    }
-    if (recognizer) {
-      recognizer.lang = speechLang();
-    }
     setMessage(messageKey, messageKind);
   }
 
@@ -237,273 +168,6 @@
     if (!soundOn && audioCtx && audioCtx.state === "running") {
       audioCtx.suspend();
     }
-  }
-
-  function speechLang() {
-    return lang === "en" ? "en-US" : "nb-NO";
-  }
-
-  function digitForIndex(index) {
-    return cells[index] ? cells[index].textContent.trim() : "";
-  }
-
-  function updateVoiceButton() {
-    var label = voiceToggleBtn.querySelector(".pref-btn-label");
-    if (label) {
-      label.textContent = t(voiceOn ? "voiceOn" : "voiceOff");
-    }
-    setPressed(voiceToggleBtn, voiceOn);
-  }
-
-  function showVoiceHint(key) {
-    if (!voiceHintEl) {
-      return;
-    }
-    voiceHintEl.hidden = false;
-    voiceHintEl.textContent = t(key);
-  }
-
-  function hideVoiceHint() {
-    if (!voiceHintEl || voiceToggleBtn.disabled) {
-      return;
-    }
-    voiceHintEl.hidden = true;
-    voiceHintEl.textContent = "";
-  }
-
-  function cancelSpeech() {
-    if (window.speechSynthesis) {
-      window.speechSynthesis.cancel();
-    }
-  }
-
-  function stopListening() {
-    listening = false;
-    if (recognizer) {
-      try {
-        recognizer.onend = null;
-        recognizer.abort();
-      } catch (e) {}
-    }
-  }
-
-  function failVoice(messageKeyName) {
-    voiceOn = false;
-    writeStore(VOICE_KEY, "off");
-    updateVoiceButton();
-    stopListening();
-    cancelSpeech();
-    showVoiceHint(messageKeyName);
-    setMessage(messageKeyName, "is-warn");
-  }
-
-  function applyVoice(next) {
-    voiceOn = next === "on";
-    writeStore(VOICE_KEY, voiceOn ? "on" : "off");
-    updateVoiceButton();
-    if (!voiceOn) {
-      stopListening();
-      cancelSpeech();
-      if (messageKey === "yourTurnVoice") {
-        setMessage("yourTurn");
-      }
-      return;
-    }
-    hideVoiceHint();
-    if (messageKey === "yourTurn") {
-      setMessage("yourTurnVoice");
-    }
-    syncListening();
-  }
-
-  function escapeRe(text) {
-    return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  }
-
-  function hasWord(text, word) {
-    return new RegExp("(^|\\s)" + escapeRe(word) + "($|\\s)", "i").test(text);
-  }
-
-  function parseSpokenIndex(raw) {
-    var text = String(raw || "")
-      .toLowerCase()
-      .replace(/[.,!?]/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-    if (!text) {
-      return null;
-    }
-    var digits = ["7", "8", "9", "4", "5", "6", "1", "2", "3"];
-    for (var i = 0; i < digits.length; i += 1) {
-      var aliases = SPEECH_ALIASES[digits[i]] || [];
-      for (var a = 0; a < aliases.length; a += 1) {
-        if (hasWord(text, aliases[a])) {
-          return i;
-        }
-      }
-    }
-    return null;
-  }
-
-  function isExactNumberWord(raw) {
-    var text = String(raw || "")
-      .toLowerCase()
-      .replace(/[.,!?]/g, " ")
-      .trim();
-    var keys = Object.keys(SPEECH_ALIASES);
-    for (var i = 0; i < keys.length; i += 1) {
-      var aliases = SPEECH_ALIASES[keys[i]];
-      for (var a = 0; a < aliases.length; a += 1) {
-        if (text === aliases[a]) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
-  function handleSpeechResult(event) {
-    if (!voiceOn || !acceptingInput) {
-      return;
-    }
-    for (var i = event.resultIndex; i < event.results.length; i += 1) {
-      var result = event.results[i];
-      var pieces = [];
-      for (var a = 0; a < result.length; a += 1) {
-        pieces.push(result[a].transcript);
-      }
-      var index = parseSpokenIndex(pieces.join(" "));
-      if (index === null) {
-        continue;
-      }
-      if (result.isFinal || isExactNumberWord(result[0] && result[0].transcript)) {
-        handlePress(index);
-        return;
-      }
-    }
-  }
-
-  function ensureRecognizer() {
-    var Rec = getSpeechRec();
-    if (!Rec || recognizer) {
-      return recognizer;
-    }
-    recognizer = new Rec();
-    recognizer.continuous = true;
-    recognizer.interimResults = true;
-    recognizer.maxAlternatives = 5;
-    recognizer.lang = speechLang();
-    recognizer.onresult = handleSpeechResult;
-    recognizer.onerror = function (event) {
-      if (event.error === "not-allowed" || event.error === "service-not-allowed") {
-        failVoice("voiceDenied");
-      }
-    };
-    recognizer.onend = function () {
-      listening = false;
-      if (voiceOn && acceptingInput) {
-        startListening();
-      }
-    };
-    return recognizer;
-  }
-
-  function startListening() {
-    if (!voiceOn || !acceptingInput || !getSpeechRec()) {
-      return;
-    }
-    var rec = ensureRecognizer();
-    if (!rec) {
-      return;
-    }
-    rec.lang = speechLang();
-    rec.onresult = handleSpeechResult;
-    rec.onend = function () {
-      listening = false;
-      if (voiceOn && acceptingInput) {
-        startListening();
-      }
-    };
-    try {
-      rec.start();
-      listening = true;
-    } catch (e) {}
-  }
-
-  function syncListening() {
-    if (voiceOn && acceptingInput) {
-      startListening();
-    } else {
-      stopListening();
-    }
-  }
-
-  function speakDigit(index) {
-    return new Promise(function (resolve) {
-      if (!voiceOn || !window.speechSynthesis) {
-        resolve();
-        return;
-      }
-      var digit = digitForIndex(index);
-      var words = SPEAK_WORDS[lang] || SPEAK_WORDS.no;
-      var phrase = words[digit];
-      if (!phrase) {
-        resolve();
-        return;
-      }
-      cancelSpeech();
-      var utter = new SpeechSynthesisUtterance(phrase);
-      utter.lang = speechLang();
-      utter.rate = 0.92;
-      utter.pitch = 1;
-      utter.volume = 1;
-      var voices = window.speechSynthesis.getVoices() || [];
-      var match = voices.filter(function (voice) {
-        return voice.lang && voice.lang.toLowerCase().indexOf(utter.lang.toLowerCase().slice(0, 2)) === 0;
-      })[0];
-      if (match) {
-        utter.voice = match;
-      }
-      var settled = false;
-      function finish() {
-        if (settled) {
-          return;
-        }
-        settled = true;
-        resolve();
-      }
-      utter.onend = finish;
-      utter.onerror = finish;
-      window.speechSynthesis.speak(utter);
-      setTimeout(finish, 1600);
-    });
-  }
-
-  async function requestMicAccess() {
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-      return true;
-    }
-    var stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    if (stream && stream.getTracks) {
-      stream.getTracks().forEach(function (track) {
-        track.stop();
-      });
-    }
-    return true;
-  }
-
-  function enableVoice() {
-    if (!getSpeechRec()) {
-      failVoice("voiceUnsupported");
-      return;
-    }
-    requestMicAccess()
-      .then(function () {
-        applyVoice("on");
-      })
-      .catch(function () {
-        failVoice("voiceDenied");
-      });
   }
 
   function ensureAudio() {
@@ -629,25 +293,11 @@
     cell.classList.remove(className);
   }
 
-  async function announceAndFlash(index) {
-    if (voiceOn && window.speechSynthesis) {
-      await Promise.all([
-        flashCell(index, "is-lit", FLASH_MS),
-        speakDigit(index),
-      ]);
-      return;
-    }
-    playCellTone(index);
-    await flashCell(index, "is-lit", FLASH_MS);
-  }
-
   async function playSequence(key, kind) {
     const token = roundToken;
     acceptingInput = false;
     playerStep = 0;
     setCellsEnabled(false);
-    stopListening();
-    cancelSpeech();
     clearCellStates();
     setMessage(key || "watch", kind);
     updateStats();
@@ -658,7 +308,8 @@
     }
 
     for (let i = 0; i < sequence.length; i += 1) {
-      await announceAndFlash(sequence[i]);
+      playCellTone(sequence[i]);
+      await flashCell(sequence[i], "is-lit", FLASH_MS);
       if (token !== roundToken) {
         return;
       }
@@ -675,8 +326,7 @@
 
     setCellsEnabled(true);
     acceptingInput = true;
-    setMessage(voiceOn ? "yourTurnVoice" : "yourTurn");
-    syncListening();
+    setMessage("yourTurn");
   }
 
   function onCorrectRound() {
@@ -701,7 +351,6 @@
     if (index !== sequence[playerStep]) {
       acceptingInput = false;
       setCellsEnabled(false);
-      stopListening();
       playWrong();
       onWrongPress();
       return;
@@ -714,7 +363,6 @@
     if (playerStep === sequence.length) {
       acceptingInput = false;
       setCellsEnabled(false);
-      stopListening();
       playSuccess();
       setMessage("correct", "is-good");
       await delay(500);
@@ -862,30 +510,10 @@
       playBell(329.63, 0.22, 0.1);
     }
   });
-  voiceToggleBtn.addEventListener("click", function () {
-    if (voiceToggleBtn.disabled) {
-      return;
-    }
-    if (voiceOn) {
-      applyVoice("off");
-    } else {
-      enableVoice();
-    }
-  });
-
-  if (!getSpeechRec()) {
-    voiceToggleBtn.disabled = true;
-    showVoiceHint("voiceUnsupported");
-  }
 
   applyTheme(readStore(THEME_KEY, "dark"));
   applyLanguage(readStore(LANG_KEY, "en"));
   applySound(readStore(SOUND_KEY, "on"));
-  applyVoice(readStore(VOICE_KEY, "off") === "on" ? "on" : "off");
-  if (voiceOn && !getSpeechRec()) {
-    applyVoice("off");
-    showVoiceHint("voiceUnsupported");
-  }
   setCellsEnabled(false);
   updateStats();
 })();
