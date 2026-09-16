@@ -248,7 +248,7 @@
   }
 
   function updateStats() {
-    levelEl.textContent = String(sequence.length || START_LENGTH);
+    levelEl.textContent = String(Math.max(1, sequence.length - START_LENGTH + 1));
     scoreEl.textContent = String(score);
   }
 
