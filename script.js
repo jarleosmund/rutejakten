@@ -150,7 +150,10 @@
   }
 
   function updateSoundButton() {
-    soundToggleBtn.textContent = t(soundOn ? "soundOn" : "soundOff");
+    var label = soundToggleBtn.querySelector(".pref-btn-label");
+    if (label) {
+      label.textContent = t(soundOn ? "soundOn" : "soundOff");
+    }
     setPressed(soundToggleBtn, soundOn);
   }
 
