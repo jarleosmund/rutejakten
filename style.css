@@ -60,7 +60,8 @@ body {
   display: flex;
   align-items: stretch;
   justify-content: space-between;
-  gap: 0.6rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   margin: 0 0 0.55rem;
 }
 
@@ -104,6 +105,10 @@ body {
   outline: 3px solid var(--lit);
   outline-offset: -3px;
   z-index: 1;
+}
+
+.pref-btn-sound {
+  min-width: 7.2rem;
 }
 
 .intro h1 {
@@ -253,13 +258,20 @@ body {
 }
 
 @media (max-width: 520px) {
+  .prefs,
   .panel {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .restart {
+  .pref-group,
+  .restart,
+  .pref-btn-sound {
     width: 100%;
+  }
+
+  .pref-btn {
+    flex: 1;
   }
 }
 

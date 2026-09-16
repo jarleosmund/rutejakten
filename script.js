@@ -6,6 +6,10 @@
   const PAUSE_AFTER_MS = 450;
   const LANG_KEY = "rutejakten-lang";
   const THEME_KEY = "rutejakten-theme";
+  const SOUND_KEY = "rutejakten-sound";
+  const CELL_FREQS = [
+    440.0, 523.25, 587.33, 293.66, 329.63, 392.0, 196.0, 220.0, 261.63,
+  ];
 
   const I18N = {
     no: {
@@ -29,6 +33,9 @@
       dark: "Mørk",
       langGroup: "Språk",
       themeGroup: "Utseende",
+      soundGroup: "Lyd",
+      soundOn: "Lyd på",
+      soundOff: "Lyd av",
       prefsAria: "Språk og utseende",
     },
     en: {
@@ -52,6 +59,9 @@
       dark: "Dark",
       langGroup: "Language",
       themeGroup: "Appearance",
+      soundGroup: "Sound",
+      soundOn: "Sound on",
+      soundOff: "Sound off",
       prefsAria: "Language and appearance",
     },
   };
@@ -65,9 +75,13 @@
   const langEnBtn = document.getElementById("lang-en");
   const themeLightBtn = document.getElementById("theme-light");
   const themeDarkBtn = document.getElementById("theme-dark");
+  const soundToggleBtn = document.getElementById("sound-toggle");
 
   let lang = "no";
   let theme = "dark";
+  let soundOn = true;
+  let audioCtx = null;
+  let masterGain = null;
   let messageKey = "idle";
   let messageKind = "";
   let sequence = [];
@@ -123,6 +137,7 @@
 
     setPressed(langNoBtn, lang === "no");
     setPressed(langEnBtn, lang === "en");
+    updateSoundButton();
     setMessage(messageKey, messageKind);
   }
 
@@ -132,6 +147,87 @@
     document.documentElement.setAttribute("data-theme", theme);
     setPressed(themeLightBtn, theme === "light");
     setPressed(themeDarkBtn, theme === "dark");
+  }
+
+  function updateSoundButton() {
+    soundToggleBtn.textContent = t(soundOn ? "soundOn" : "soundOff");
+    setPressed(soundToggleBtn, soundOn);
+  }
+
+  function applySound(next) {
+    soundOn = next !== "off";
+    writeStore(SOUND_KEY, soundOn ? "on" : "off");
+    updateSoundButton();
+    if (!soundOn && audioCtx && audioCtx.state === "running") {
+      audioCtx.suspend();
+    }
+  }
+
+  function ensureAudio() {
+    if (!soundOn) {
+      return;
+    }
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) {
+      return;
+    }
+    if (!audioCtx) {
+      audioCtx = new AC();
+      masterGain = audioCtx.createGain();
+      masterGain.gain.value = 0.65;
+      masterGain.connect(audioCtx.destination);
+    }
+    if (audioCtx.state === "suspended") {
+      audioCtx.resume();
+    }
+  }
+
+  function playBell(freq, seconds, peak, delaySec) {
+    if (!soundOn) {
+      return;
+    }
+    ensureAudio();
+    if (!audioCtx || !masterGain) {
+      return;
+    }
+    var startAt = audioCtx.currentTime + (delaySec || 0);
+    var attack = 0.018;
+    var peakGain = peak || 0.11;
+    function voice(hz, level) {
+      var osc = audioCtx.createOscillator();
+      var gain = audioCtx.createGain();
+      osc.type = "sine";
+      osc.frequency.value = hz;
+      osc.frequency.setValueAtTime(hz, startAt);
+      gain.gain.setValueAtTime(0.0001, startAt);
+      gain.gain.exponentialRampToValueAtTime(level, startAt + attack);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startAt + seconds);
+      osc.connect(gain);
+      gain.connect(masterGain);
+      osc.start(startAt);
+      osc.stop(startAt + seconds + 0.04);
+    }
+    voice(freq, peakGain);
+    voice(freq * 2, peakGain * 0.1);
+  }
+
+  function playCellTone(index) {
+    playBell(CELL_FREQS[index], 0.32, 0.1);
+  }
+
+  function playCorrectTone(index) {
+    var freq = Math.min(CELL_FREQS[index] * 1.25, 620);
+    playBell(freq, 0.28, 0.12);
+  }
+
+  function playSuccess() {
+    playBell(329.63, 0.28, 0.1, 0);
+    playBell(392.0, 0.3, 0.11, 0.13);
+    playBell(523.25, 0.42, 0.13, 0.26);
+  }
+
+  function playWrong() {
+    playBell(174.61, 0.48, 0.08);
   }
 
   function setMessage(key, kind) {
@@ -170,6 +266,7 @@
   }
 
   function startGame() {
+    ensureAudio();
     roundToken += 1;
     sequence = [];
     playerStep = 0;
@@ -204,6 +301,7 @@
     }
 
     for (let i = 0; i < sequence.length; i += 1) {
+      playCellTone(sequence[i]);
       await flashCell(sequence[i], "is-lit", FLASH_MS);
       if (token !== roundToken) {
         return;
@@ -246,14 +344,19 @@
     if (index !== sequence[playerStep]) {
       acceptingInput = false;
       setCellsEnabled(false);
+      playWrong();
       onWrongPress();
       return;
     }
 
     playerStep += 1;
+    if (playerStep !== sequence.length) {
+      playCorrectTone(index);
+    }
     if (playerStep === sequence.length) {
       acceptingInput = false;
       setCellsEnabled(false);
+      playSuccess();
       setMessage("correct", "is-good");
       await delay(500);
       if (token !== roundToken) {
@@ -328,9 +431,16 @@
   themeDarkBtn.addEventListener("click", function () {
     applyTheme("dark");
   });
+  soundToggleBtn.addEventListener("click", function () {
+    applySound(soundOn ? "off" : "on");
+    if (soundOn) {
+      playBell(329.63, 0.22, 0.1);
+    }
+  });
 
   applyTheme(readStore(THEME_KEY, "dark"));
   applyLanguage(readStore(LANG_KEY, "no"));
+  applySound(readStore(SOUND_KEY, "on"));
   setCellsEnabled(false);
   updateStats();
 })();

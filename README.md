@@ -32,7 +32,9 @@ python3 -m http.server 8000
 - 3×3 sequence-memory gameplay, no timer
 - Norwegian / English language toggle (top left)
 - Light / dark theme toggle (top right), both tuned for high contrast
-- Preferences (language + theme) are remembered via `localStorage`
+- Gentle audio feedback — soft bell-like tones on a pentatonic scale, no
+  harsh beeps, with a sound on/off toggle
+- Preferences (language, theme, sound) are remembered via `localStorage`
 - Responsive, compact layout — the whole board fits on screen without
   scrolling
 
