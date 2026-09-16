@@ -31,7 +31,19 @@
       <div class="top">
         <header class="intro">
           <h1 data-i18n="heading">Grid Hunt</h1>
-          <p data-i18n="intro">
+          <button
+            type="button"
+            id="intro-toggle"
+            class="intro-toggle"
+            aria-expanded="false"
+            aria-controls="intro-text"
+          >
+            <span class="intro-toggle-label" data-i18n="howToPlay">How to play?</span>
+            <span class="intro-toggle-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+            </span>
+          </button>
+          <p id="intro-text" data-i18n="intro" hidden>
             A grid shows a short sequence of tiles lighting up, one at a
             time. Press the tiles in the same order. If you get it right,
             you score a point and the sequence grows by one tile. If you
@@ -140,17 +152,19 @@
         Press “Restart” to begin.
       </p>
 
-      <section class="board" data-i18n-aria="boardAria">
-        <button type="button" class="cell" data-index="0" aria-label="Tile 7">7</button>
-        <button type="button" class="cell" data-index="1" aria-label="Tile 8">8</button>
-        <button type="button" class="cell" data-index="2" aria-label="Tile 9">9</button>
-        <button type="button" class="cell" data-index="3" aria-label="Tile 4">4</button>
-        <button type="button" class="cell" data-index="4" aria-label="Tile 5">5</button>
-        <button type="button" class="cell" data-index="5" aria-label="Tile 6">6</button>
-        <button type="button" class="cell" data-index="6" aria-label="Tile 1">1</button>
-        <button type="button" class="cell" data-index="7" aria-label="Tile 2">2</button>
-        <button type="button" class="cell" data-index="8" aria-label="Tile 3">3</button>
-      </section>
+      <div class="board-area">
+        <section class="board" data-i18n-aria="boardAria">
+          <button type="button" class="cell" data-index="0" aria-label="Tile 7">7</button>
+          <button type="button" class="cell" data-index="1" aria-label="Tile 8">8</button>
+          <button type="button" class="cell" data-index="2" aria-label="Tile 9">9</button>
+          <button type="button" class="cell" data-index="3" aria-label="Tile 4">4</button>
+          <button type="button" class="cell" data-index="4" aria-label="Tile 5">5</button>
+          <button type="button" class="cell" data-index="5" aria-label="Tile 6">6</button>
+          <button type="button" class="cell" data-index="6" aria-label="Tile 1">1</button>
+          <button type="button" class="cell" data-index="7" aria-label="Tile 2">2</button>
+          <button type="button" class="cell" data-index="8" aria-label="Tile 3">3</button>
+        </section>
+      </div>
     </main>
 
     <script src="script.js"></script>

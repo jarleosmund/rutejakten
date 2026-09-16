@@ -7,6 +7,7 @@
   const LANG_KEY = "rutejakten-lang";
   const THEME_KEY = "rutejakten-theme";
   const SOUND_KEY = "rutejakten-sound";
+  const INTRO_KEY = "rutejakten-intro";
   const CELL_FREQS = [
     440.0, 523.25, 587.33, 293.66, 329.63, 392.0, 196.0, 220.0, 261.63,
   ];
@@ -39,6 +40,7 @@
       soundOff: "Lyd av",
       prefsAria: "Språk og utseende",
       settings: "Innstillinger",
+      howToPlay: "Hvordan spille?",
     },
     en: {
       title: "Grid Hunt",
@@ -67,6 +69,7 @@
       soundOff: "Sound off",
       prefsAria: "Language and appearance",
       settings: "Settings",
+      howToPlay: "How to play?",
     },
   };
 
@@ -83,10 +86,13 @@
   const soundToggleBtn = document.getElementById("sound-toggle");
   const settingsToggleBtn = document.getElementById("settings-toggle");
   const settingsPanel = document.getElementById("settings-panel");
+  const introToggleBtn = document.getElementById("intro-toggle");
+  const introText = document.getElementById("intro-text");
 
   let lang = "no";
   let theme = "dark";
   let soundOn = true;
+  let introOpen = false;
   let audioCtx = null;
   let masterGain = null;
   let messageKey = "idle";
@@ -163,6 +169,13 @@
       label.textContent = t(soundOn ? "soundOn" : "soundOff");
     }
     setPressed(soundToggleBtn, soundOn);
+  }
+
+  function applyIntro(next) {
+    introOpen = next === "open";
+    writeStore(INTRO_KEY, introOpen ? "open" : "closed");
+    introText.hidden = !introOpen;
+    introToggleBtn.setAttribute("aria-expanded", introOpen ? "true" : "false");
   }
 
   function applySound(next) {
@@ -516,6 +529,10 @@
     }
   });
 
+  introToggleBtn.addEventListener("click", function () {
+    applyIntro(introOpen ? "closed" : "open");
+  });
+
   restartBtn.addEventListener("click", startGame);
   repeatBtn.addEventListener("click", repeatSequence);
   langNoBtn.addEventListener("click", function () {
@@ -540,6 +557,7 @@
   applyTheme(readStore(THEME_KEY, "dark"));
   applyLanguage(readStore(LANG_KEY, "en"));
   applySound(readStore(SOUND_KEY, "on"));
+  applyIntro(readStore(INTRO_KEY, "closed"));
   setBoardEnabled(false);
   setRepeatEnabled(false);
   updateStats();

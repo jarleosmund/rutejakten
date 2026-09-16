@@ -81,6 +81,11 @@ body {
   color: var(--ink);
   line-height: 1.45;
   -webkit-font-smoothing: antialiased;
+  /* Safety net: the board sizes itself fluidly to the available space and
+     should never need this, but if content ever exceeds the viewport
+     (extreme aspect ratios, very large text zoom, …) we scroll the page
+     rather than clip or crush the board below a usable size. */
+  overflow-y: auto;
 }
 
 .page {
@@ -102,6 +107,7 @@ body {
   align-items: flex-start;
   justify-content: space-between;
   gap: 0.75rem;
+  flex: none;
 }
 
 .settings {
@@ -248,6 +254,45 @@ body {
   line-height: 1.1;
 }
 
+.intro-toggle {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0 0 0.5rem;
+  padding: 0.35rem 0.65rem;
+  min-height: 2.6rem;
+  border: 2px solid var(--line-soft);
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.98rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.intro-toggle:hover,
+.intro-toggle:focus-visible {
+  background: var(--cell-hover);
+  border-color: var(--line);
+}
+
+.intro-toggle:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.intro-toggle-icon {
+  display: inline-flex;
+  transition: transform 0.15s ease;
+}
+
+.intro-toggle[aria-expanded="true"] .intro-toggle-icon {
+  transform: rotate(180deg);
+}
+
 .intro p {
   margin: 0;
   font-size: clamp(1rem, 2.3vw, 1.08rem);
@@ -267,6 +312,7 @@ body {
   border: 2px solid var(--line);
   border-radius: var(--r-lg);
   box-shadow: var(--shadow-md);
+  flex: none;
 }
 
 .stats {
@@ -363,6 +409,7 @@ body {
   font-size: clamp(1.05rem, 2.4vw, 1.18rem);
   font-weight: 700;
   text-align: center;
+  flex: none;
 }
 
 .message.is-good {
@@ -375,12 +422,38 @@ body {
 
 /* ---------- board ---------- */
 
+/*
+ * The board fills whatever vertical space is left after the header,
+ * status panel and message — computed by the browser's flex layout,
+ * not by hand-calibrated "100dvh - Nrem" magic numbers (those broke on
+ * viewport combinations that fall between our tested breakpoints, e.g.
+ * a short-but-wide laptop window).
+ *
+ * .board-area is a flex child with flex:1, so it always resolves to
+ * exactly the remaining height, for any viewport size or intro-text
+ * state. container-type:size exposes that resolved height to the
+ * board itself via cqh units, so the board can pick the largest square
+ * that fits both its available width (100%) and available height
+ * (100cqh), capped at 34rem so it doesn't get comically large on huge
+ * screens, and floored at 15rem so cells stay tappable. If that floor
+ * ever can't fit (extreme window shapes), the page scrolls instead of
+ * the board getting crushed — see `overflow-y: auto` on body.
+ */
+.board-area {
+  flex: 1 1 0;
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  container-type: size;
+}
+
 .board {
-  width: min(34rem, 100%, calc(100vh - 22.5rem));
-  width: min(34rem, 100%, calc(100dvh - 22.5rem));
+  width: max(15rem, min(100%, 100cqh, 34rem));
   aspect-ratio: 1;
   height: auto;
-  margin: 0.2rem auto 0;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
@@ -458,11 +531,6 @@ body {
     padding-top: calc(0.5rem + env(safe-area-inset-top, 0px));
     padding-bottom: calc(0.7rem + env(safe-area-inset-bottom, 0px));
   }
-
-  .board {
-    width: min(26rem, 100%, calc(100vh - 17.5rem));
-    width: min(26rem, 100%, calc(100dvh - 17.5rem));
-  }
 }
 
 @media (max-width: 460px) {
@@ -486,17 +554,14 @@ body {
     justify-content: center;
     width: 100%;
   }
-
-  .board {
-    width: min(24rem, 100%, calc(100vh - 16.5rem));
-    width: min(24rem, 100%, calc(100dvh - 16.5rem));
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .cell,
   .pref-btn,
   .settings-toggle,
+  .intro-toggle,
+  .intro-toggle-icon,
   .restart,
   .repeat {
     transition: none;
