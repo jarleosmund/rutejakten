@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="no" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rutejakten</title>
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem("rutejakten-theme");
+          if (theme === "dark" || theme === "light") {
+            document.documentElement.setAttribute("data-theme", theme);
+          }
+          var lang = localStorage.getItem("rutejakten-lang");
+          if (lang === "en") {
+            document.documentElement.lang = "en";
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="page">
+      <div class="prefs" role="toolbar" data-i18n-aria="prefsAria">
+        <div class="pref-group" role="group" data-i18n-aria="langGroup">
+          <button type="button" id="lang-no" class="pref-btn" aria-pressed="true">
+            NO
+          </button>
+          <button type="button" id="lang-en" class="pref-btn" aria-pressed="false">
+            EN
+          </button>
+        </div>
+        <div class="pref-group" role="group" data-i18n-aria="themeGroup">
+          <button type="button" id="theme-light" class="pref-btn" aria-pressed="false" data-i18n="light">
+            Lys
+          </button>
+          <button type="button" id="theme-dark" class="pref-btn" aria-pressed="true" data-i18n="dark">
+            Mørk
+          </button>
+        </div>
+      </div>
+
+      <header class="intro">
+        <h1 data-i18n="heading">Rutejakten</h1>
+        <p data-i18n="intro">
+          Et rutenett viser en kort sekvens av ruter som lyser opp, én om
+          gangen. Trykk rutene i samme rekkefølge. Klarer du det, får du poeng
+          og sekvensen blir én rute lengre. Trykker du feil, vises den
+          riktige sekvensen, og du prøver samme nivå igjen. Ingen tidsfrist.
+          Du kan også spille med tallene 1–9 på tastaturet, med samme
+          plassering som på numerisk tastatur.
+        </p>
+      </header>
+
+      <section class="panel" data-i18n-aria="statusAria">
+        <div class="stats">
+          <p class="stat">
+            <span data-i18n="level">Nivå</span>
+            <strong id="level">2</strong>
+          </p>
+          <p class="stat">
+            <span data-i18n="score">Poeng</span>
+            <strong id="score">0</strong>
+          </p>
+        </div>
+        <button type="button" id="restart" class="restart" data-i18n="restart">
+          Start på nytt
+        </button>
+      </section>
+
+      <p id="message" class="message" role="status" aria-live="polite">
+        Trykk «Start på nytt» for å begynne.
+      </p>
+
+      <section class="board" data-i18n-aria="boardAria">
+        <button type="button" class="cell" data-index="0" aria-label="Rute 7">7</button>
+        <button type="button" class="cell" data-index="1" aria-label="Rute 8">8</button>
+        <button type="button" class="cell" data-index="2" aria-label="Rute 9">9</button>
+        <button type="button" class="cell" data-index="3" aria-label="Rute 4">4</button>
+        <button type="button" class="cell" data-index="4" aria-label="Rute 5">5</button>
+        <button type="button" class="cell" data-index="5" aria-label="Rute 6">6</button>
+        <button type="button" class="cell" data-index="6" aria-label="Rute 1">1</button>
+        <button type="button" class="cell" data-index="7" aria-label="Rute 2">2</button>
+        <button type="button" class="cell" data-index="8" aria-label="Rute 3">3</button>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
