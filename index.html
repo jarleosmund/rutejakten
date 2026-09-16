@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="no" data-theme="dark">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <title>Rutejakten</title>
+    <title>Grid Hunt</title>
     <link
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%231f6b45'/%3E%3Cg fill='%23fffdf8'%3E%3Crect x='4' y='4' width='6' height='6' rx='1.4'/%3E%3Crect x='14' y='4' width='6' height='6' rx='1.4' opacity='.55'/%3E%3Crect x='4' y='14' width='6' height='6' rx='1.4' opacity='.55'/%3E%3Crect x='14' y='14' width='6' height='6' rx='1.4' opacity='.55'/%3E%3C/g%3E%3C/svg%3E"
@@ -18,8 +18,8 @@
             document.documentElement.setAttribute("data-theme", theme);
           }
           var lang = localStorage.getItem("rutejakten-lang");
-          if (lang === "en") {
-            document.documentElement.lang = "en";
+          if (lang === "no") {
+            document.documentElement.lang = "no";
           }
         } catch (e) {}
       })();
@@ -29,63 +29,93 @@
   <body>
     <main class="page">
       <div class="top">
-        <div class="prefs" role="toolbar" data-i18n-aria="prefsAria">
-          <div class="pref-group" role="group" data-i18n-aria="langGroup">
-            <button type="button" id="lang-no" class="pref-btn" aria-pressed="true">
-              NO
-            </button>
-            <button type="button" id="lang-en" class="pref-btn" aria-pressed="false">
-              EN
-            </button>
-          </div>
-          <div class="pref-group" role="group" data-i18n-aria="themeGroup">
-            <button type="button" id="theme-light" class="pref-btn" aria-pressed="false">
-              <span class="pref-btn-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2.2M12 19.8V22M4.93 4.93l1.55 1.55M17.52 17.52l1.55 1.55M2 12h2.2M19.8 12H22M4.93 19.07l1.55-1.55M17.52 6.48l1.55-1.55"></path></svg>
-              </span>
-              <span class="pref-btn-label" data-i18n="light">Lys</span>
-            </button>
-            <button type="button" id="theme-dark" class="pref-btn" aria-pressed="true">
-              <span class="pref-btn-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" stroke="none"><path d="M20.5 14.7A8.5 8.5 0 0 1 9.3 3.5a.75.75 0 0 0-.93-.97A10 10 0 1 0 21.47 15.6a.75.75 0 0 0-.97-.9z"></path></svg>
-              </span>
-              <span class="pref-btn-label" data-i18n="dark">Mørk</span>
-            </button>
-          </div>
-          <div class="pref-group" role="group" data-i18n-aria="soundGroup">
-            <button type="button" id="sound-toggle" class="pref-btn pref-btn-sound" aria-pressed="true">
-              <span class="pref-btn-icon pref-btn-icon-on" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5v5h3.4l4.6 3.5v-12L7.4 9.5H4z"></path><path d="M16 9a4.2 4.2 0 0 1 0 6"></path><path d="M18.6 6.4a8 8 0 0 1 0 11.2"></path></svg>
-              </span>
-              <span class="pref-btn-icon pref-btn-icon-off" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5v5h3.4l4.6 3.5v-12L7.4 9.5H4z"></path><path d="M16.2 9.8l4.4 4.4M20.6 9.8l-4.4 4.4"></path></svg>
-              </span>
-              <span class="pref-btn-label">Lyd på</span>
-            </button>
-          </div>
-        </div>
-
         <header class="intro">
-          <h1 data-i18n="heading">Rutejakten</h1>
+          <h1 data-i18n="heading">Grid Hunt</h1>
           <p data-i18n="intro">
-            Et rutenett viser en kort sekvens av ruter som lyser opp, én om
-            gangen. Trykk rutene i samme rekkefølge. Klarer du det, får du poeng
-            og sekvensen blir én rute lengre. Trykker du feil, vises den
-            riktige sekvensen, og du prøver samme nivå igjen. Ingen tidsfrist.
-            Du kan også spille med tallene 1–9 på tastaturet, med samme
-            plassering som på numerisk tastatur.
+            A grid shows a short sequence of tiles lighting up, one at a
+            time. Press the tiles in the same order. If you get it right,
+            you score a point and the sequence grows by one tile. If you
+            press the wrong tile, the correct sequence is shown and you try
+            the same level again. No time limit. You can also play with the
+            number keys 1–9, using the same layout as a numeric keypad.
           </p>
         </header>
+
+        <div class="settings">
+          <button
+            type="button"
+            id="settings-toggle"
+            class="settings-toggle"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-controls="settings-panel"
+            data-i18n-aria="settings"
+          >
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" stroke="none">
+              <circle cx="12" cy="12" r="3.4"></circle>
+              <rect x="10.6" y="1.5" width="2.8" height="4" rx="1"></rect>
+              <rect x="10.6" y="18.5" width="2.8" height="4" rx="1"></rect>
+              <rect x="1.5" y="10.6" width="4" height="2.8" rx="1"></rect>
+              <rect x="18.5" y="10.6" width="4" height="2.8" rx="1"></rect>
+              <rect x="10.6" y="1.5" width="2.8" height="4" rx="1" transform="rotate(45 12 12)"></rect>
+              <rect x="10.6" y="18.5" width="2.8" height="4" rx="1" transform="rotate(45 12 12)"></rect>
+              <rect x="1.5" y="10.6" width="4" height="2.8" rx="1" transform="rotate(45 12 12)"></rect>
+              <rect x="18.5" y="10.6" width="4" height="2.8" rx="1" transform="rotate(45 12 12)"></rect>
+            </svg>
+          </button>
+
+          <div
+            id="settings-panel"
+            class="settings-panel"
+            role="menu"
+            data-i18n-aria="prefsAria"
+            hidden
+          >
+            <div class="pref-group" role="group" data-i18n-aria="langGroup">
+              <button type="button" id="lang-no" class="pref-btn" aria-pressed="false">
+                NO
+              </button>
+              <button type="button" id="lang-en" class="pref-btn" aria-pressed="true">
+                EN
+              </button>
+            </div>
+            <div class="pref-group" role="group" data-i18n-aria="themeGroup">
+              <button type="button" id="theme-light" class="pref-btn" aria-pressed="false">
+                <span class="pref-btn-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2.2M12 19.8V22M4.93 4.93l1.55 1.55M17.52 17.52l1.55 1.55M2 12h2.2M19.8 12H22M4.93 19.07l1.55-1.55M17.52 6.48l1.55-1.55"></path></svg>
+                </span>
+                <span class="pref-btn-label" data-i18n="light">Light</span>
+              </button>
+              <button type="button" id="theme-dark" class="pref-btn" aria-pressed="true">
+                <span class="pref-btn-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" stroke="none"><path d="M20.5 14.7A8.5 8.5 0 0 1 9.3 3.5a.75.75 0 0 0-.93-.97A10 10 0 1 0 21.47 15.6a.75.75 0 0 0-.97-.9z"></path></svg>
+                </span>
+                <span class="pref-btn-label" data-i18n="dark">Dark</span>
+              </button>
+            </div>
+            <div class="pref-group" role="group" data-i18n-aria="soundGroup">
+              <button type="button" id="sound-toggle" class="pref-btn pref-btn-sound" aria-pressed="true">
+                <span class="pref-btn-icon pref-btn-icon-on" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5v5h3.4l4.6 3.5v-12L7.4 9.5H4z"></path><path d="M16 9a4.2 4.2 0 0 1 0 6"></path><path d="M18.6 6.4a8 8 0 0 1 0 11.2"></path></svg>
+                </span>
+                <span class="pref-btn-icon pref-btn-icon-off" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5v5h3.4l4.6 3.5v-12L7.4 9.5H4z"></path><path d="M16.2 9.8l4.4 4.4M20.6 9.8l-4.4 4.4"></path></svg>
+                </span>
+                <span class="pref-btn-label">Sound on</span>
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       <section class="panel" data-i18n-aria="statusAria">
         <div class="stats">
           <p class="stat">
-            <span data-i18n="level">Nivå</span>
+            <span data-i18n="level">Level</span>
             <strong id="level">2</strong>
           </p>
           <p class="stat">
-            <span data-i18n="score">Poeng</span>
+            <span data-i18n="score">Score</span>
             <strong id="score">0</strong>
           </p>
         </div>
@@ -93,24 +123,24 @@
           <span class="restart-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11A8 8 0 1 0 18.5 16.5"></path><path d="M20 4.5V11h-6.5"></path></svg>
           </span>
-          <span class="pref-btn-label" data-i18n="restart">Start på nytt</span>
+          <span class="pref-btn-label" data-i18n="restart">Restart</span>
         </button>
       </section>
 
       <p id="message" class="message" role="status" aria-live="polite">
-        Trykk «Start på nytt» for å begynne.
+        Press “Restart” to begin.
       </p>
 
       <section class="board" data-i18n-aria="boardAria">
-        <button type="button" class="cell" data-index="0" aria-label="Rute 7">7</button>
-        <button type="button" class="cell" data-index="1" aria-label="Rute 8">8</button>
-        <button type="button" class="cell" data-index="2" aria-label="Rute 9">9</button>
-        <button type="button" class="cell" data-index="3" aria-label="Rute 4">4</button>
-        <button type="button" class="cell" data-index="4" aria-label="Rute 5">5</button>
-        <button type="button" class="cell" data-index="5" aria-label="Rute 6">6</button>
-        <button type="button" class="cell" data-index="6" aria-label="Rute 1">1</button>
-        <button type="button" class="cell" data-index="7" aria-label="Rute 2">2</button>
-        <button type="button" class="cell" data-index="8" aria-label="Rute 3">3</button>
+        <button type="button" class="cell" data-index="0" aria-label="Tile 7">7</button>
+        <button type="button" class="cell" data-index="1" aria-label="Tile 8">8</button>
+        <button type="button" class="cell" data-index="2" aria-label="Tile 9">9</button>
+        <button type="button" class="cell" data-index="3" aria-label="Tile 4">4</button>
+        <button type="button" class="cell" data-index="4" aria-label="Tile 5">5</button>
+        <button type="button" class="cell" data-index="5" aria-label="Tile 6">6</button>
+        <button type="button" class="cell" data-index="6" aria-label="Tile 1">1</button>
+        <button type="button" class="cell" data-index="7" aria-label="Tile 2">2</button>
+        <button type="button" class="cell" data-index="8" aria-label="Tile 3">3</button>
       </section>
     </main>
 

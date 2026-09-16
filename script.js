@@ -37,6 +37,7 @@
       soundOn: "Lyd på",
       soundOff: "Lyd av",
       prefsAria: "Språk og utseende",
+      settings: "Innstillinger",
     },
     en: {
       title: "Grid Hunt",
@@ -63,6 +64,7 @@
       soundOn: "Sound on",
       soundOff: "Sound off",
       prefsAria: "Language and appearance",
+      settings: "Settings",
     },
   };
 
@@ -76,6 +78,8 @@
   const themeLightBtn = document.getElementById("theme-light");
   const themeDarkBtn = document.getElementById("theme-dark");
   const soundToggleBtn = document.getElementById("sound-toggle");
+  const settingsToggleBtn = document.getElementById("settings-toggle");
+  const settingsPanel = document.getElementById("settings-panel");
 
   let lang = "no";
   let theme = "dark";
@@ -421,6 +425,41 @@
     handlePress(index);
   });
 
+  function openSettings() {
+    settingsPanel.hidden = false;
+    settingsToggleBtn.setAttribute("aria-expanded", "true");
+  }
+
+  function closeSettings() {
+    settingsPanel.hidden = true;
+    settingsToggleBtn.setAttribute("aria-expanded", "false");
+  }
+
+  settingsToggleBtn.addEventListener("click", function () {
+    if (settingsPanel.hidden) {
+      openSettings();
+    } else {
+      closeSettings();
+    }
+  });
+
+  document.addEventListener("click", function (event) {
+    if (settingsPanel.hidden) {
+      return;
+    }
+    if (settingsPanel.contains(event.target) || settingsToggleBtn.contains(event.target)) {
+      return;
+    }
+    closeSettings();
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && !settingsPanel.hidden) {
+      closeSettings();
+      settingsToggleBtn.focus();
+    }
+  });
+
   restartBtn.addEventListener("click", startGame);
   langNoBtn.addEventListener("click", function () {
     applyLanguage("no");
@@ -442,7 +481,7 @@
   });
 
   applyTheme(readStore(THEME_KEY, "dark"));
-  applyLanguage(readStore(LANG_KEY, "no"));
+  applyLanguage(readStore(LANG_KEY, "en"));
   applySound(readStore(SOUND_KEY, "on"));
   setCellsEnabled(false);
   updateStats();
