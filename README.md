@@ -23,20 +23,30 @@ python3 -m http.server 8000
 ## Controls
 
 - **Mouse**: click a square
-- **Keyboard**: press 1–9, using the same physical layout as a numeric
-  keypad (7-8-9 top row, 4-5-6 middle row, 1-2-3 bottom row) — works whether
-  or not Num Lock is on
+- **Keyboard**: press 1–9, or QWE / ASD / ZXC — both use the same physical
+  layout as a numeric keypad (top row / middle row / bottom row), and work
+  whether or not Num Lock is on
+- **Voice** (optional, see below): say the number instead of pressing it
 
 ## Features
 
 - 3×3 sequence-memory gameplay, no timer
-- Norwegian / English language toggle (top left)
-- Light / dark theme toggle (top right), both tuned for high contrast
+- One small settings button (top right) opens a panel with language
+  (Norwegian/English), theme (light/dark), sound, and voice controls —
+  kept out of the way until you want them
+- Defaults to dark theme, English, sound on; saved choices override these
+  on your next visit via `localStorage`
 - Gentle audio feedback — soft bell-like tones on a pentatonic scale, no
-  harsh beeps, with a sound on/off toggle
-- Preferences (language, theme, sound) are remembered via `localStorage`
+  harsh beeps
+- Optional voice mode: the sequence is read aloud (Web Speech API text-to-
+  speech) and you can answer by speaking the number instead of clicking.
+  Off by default; turning it on asks for microphone access. Speech
+  recognition support varies by browser (best in Chrome), and in Chrome the
+  audio is sent to Google's servers for transcription rather than
+  processed on-device — mouse and keyboard always keep working as a
+  fallback.
 - Responsive, compact layout — the whole board fits on screen without
-  scrolling
+  scrolling, on both mobile and desktop
 
 ## Project structure
 
