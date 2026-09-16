@@ -17,7 +17,7 @@
       title: "Rutejakten",
       heading: "Rutejakten",
       intro:
-        "Et rutenett viser en kort sekvens av ruter som lyser opp, én om gangen. Trykk rutene i samme rekkefølge. Klarer du det, får du poeng og sekvensen blir én rute lengre. Trykker du feil, vises den riktige sekvensen, og du prøver samme nivå igjen. Ingen tidsfrist. Du kan også spille med tallene 1–9 på tastaturet (samme plassering som på numerisk tastatur) eller med QWE/ASD/ZXC.",
+        "Et rutenett viser en kort sekvens av ruter som lyser opp, én om gangen. Trykk rutene i samme rekkefølge. Klarer du det, får du poeng og sekvensen blir én rute lengre. Trykker du feil, låses brettet – trykk «Gjenta» for å se sekvensen igjen, det koster ett poeng (poengsummen kan bli negativ). Ingen tidsfrist. Du kan også spille med tallene 1–9 på tastaturet (samme plassering som på numerisk tastatur) eller med QWE/ASD/ZXC.",
       level: "Nivå",
       score: "Poeng",
       restart: "Start på nytt",
@@ -46,7 +46,7 @@
       title: "Grid Hunt",
       heading: "Grid Hunt",
       intro:
-        "A grid shows a short sequence of tiles lighting up, one at a time. Press the tiles in the same order. If you get it right, you score a point and the sequence grows by one tile. If you press the wrong tile, the correct sequence is shown and you try the same level again. No time limit. You can also play with the number keys 1–9 (same layout as a numeric keypad) or with QWE/ASD/ZXC.",
+        "A grid shows a short sequence of tiles lighting up, one at a time. Press the tiles in the same order. Get it right and you score a point, with the sequence growing by one tile. Get it wrong and the board locks — press “Repeat” to see the sequence again, which costs a point (your score can go negative). No time limit. You can also play with the number keys 1–9 (same layout as a numeric keypad) or with QWE/ASD/ZXC.",
       level: "Level",
       score: "Score",
       restart: "Restart",
