@@ -290,14 +290,20 @@ body {
   font-variant-numeric: tabular-nums;
 }
 
-.restart {
+.actions {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.restart,
+.repeat {
   appearance: none;
   display: inline-flex;
   align-items: center;
   gap: 0.45rem;
   border: 2px solid var(--line);
-  background: var(--ink);
-  color: var(--paper);
   font: inherit;
   font-size: 1.02rem;
   font-weight: 700;
@@ -305,10 +311,21 @@ body {
   border-radius: var(--r-md);
   cursor: pointer;
   min-height: 2.9rem;
-  transition: background 0.15s ease, transform 0.1s ease;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
 }
 
-.restart-icon {
+.restart {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.repeat {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.restart-icon,
+.repeat-icon {
   display: inline-flex;
   line-height: 0;
 }
@@ -318,13 +335,24 @@ body {
   color: var(--lit-ink);
 }
 
-.restart:active {
+.repeat:hover:not(:disabled) {
+  background: var(--cell-hover);
+}
+
+.restart:active,
+.repeat:active:not(:disabled) {
   transform: scale(0.97);
 }
 
-.restart:focus-visible {
+.restart:focus-visible,
+.repeat:focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 3px;
+}
+
+.repeat:disabled {
+  opacity: 0.45;
+  cursor: default;
 }
 
 /* ---------- status message ---------- */
@@ -452,7 +480,9 @@ body {
     justify-content: space-between;
   }
 
-  .restart {
+  .actions,
+  .restart,
+  .repeat {
     justify-content: center;
     width: 100%;
   }
@@ -467,7 +497,8 @@ body {
   .cell,
   .pref-btn,
   .settings-toggle,
-  .restart {
+  .restart,
+  .repeat {
     transition: none;
   }
 }

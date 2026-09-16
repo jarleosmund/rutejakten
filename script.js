@@ -20,6 +20,7 @@
       level: "Nivå",
       score: "Poeng",
       restart: "Start på nytt",
+      repeat: "Gjenta",
       idle: "Trykk «Start på nytt» for å begynne.",
       watch: "Se på sekvensen.",
       yourTurn: "Din tur. Trykk rutene i samme rekkefølge.",
@@ -47,6 +48,7 @@
       level: "Level",
       score: "Score",
       restart: "Restart",
+      repeat: "Repeat",
       idle: "Press “Restart” to begin.",
       watch: "Watch the sequence.",
       yourTurn: "Your turn. Press the tiles in the same order.",
@@ -73,6 +75,7 @@
   const scoreEl = document.getElementById("score");
   const messageEl = document.getElementById("message");
   const restartBtn = document.getElementById("restart");
+  const repeatBtn = document.getElementById("repeat");
   const langNoBtn = document.getElementById("lang-no");
   const langEnBtn = document.getElementById("lang-en");
   const themeLightBtn = document.getElementById("theme-light");
@@ -256,6 +259,7 @@
     cells.forEach(function (cell) {
       cell.disabled = !enabled;
     });
+    repeatBtn.disabled = !enabled;
   }
 
   function clearCellStates() {
@@ -338,6 +342,15 @@
 
   function onWrongPress() {
     playSequence("wrong", "is-warn");
+  }
+
+  function repeatSequence() {
+    if (!acceptingInput) {
+      return;
+    }
+    score -= 1;
+    updateStats();
+    playSequence("watch");
   }
 
   async function handlePress(index) {
@@ -492,6 +505,7 @@
   });
 
   restartBtn.addEventListener("click", startGame);
+  repeatBtn.addEventListener("click", repeatSequence);
   langNoBtn.addEventListener("click", function () {
     applyLanguage("no");
   });
