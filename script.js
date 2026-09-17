@@ -76,6 +76,7 @@
   };
 
   const cells = Array.from(document.querySelectorAll(".cell"));
+  const boardEl = document.querySelector(".board");
   const levelEl = document.getElementById("level");
   const scoreEl = document.getElementById("score");
   const messageEl = document.getElementById("message");
@@ -278,6 +279,11 @@
     });
   }
 
+  function setAcceptingInput(value) {
+    acceptingInput = value;
+    boardEl.classList.toggle("is-your-turn", value);
+  }
+
   function setRepeatEnabled(enabled) {
     repeatBtn.disabled = !enabled;
   }
@@ -302,7 +308,7 @@
     sequence = [];
     playerStep = 0;
     score = 0;
-    acceptingInput = false;
+    setAcceptingInput(false);
     awaitingRepeat = false;
     tryAgainCount = 0;
     for (let i = 0; i < START_LENGTH; i += 1) {
@@ -321,7 +327,7 @@
 
   async function playSequence(key, kind) {
     const token = roundToken;
-    acceptingInput = false;
+    setAcceptingInput(false);
     awaitingRepeat = false;
     playerStep = 0;
     setBoardEnabled(false);
@@ -354,7 +360,7 @@
 
     setBoardEnabled(true);
     setRepeatEnabled(true);
-    acceptingInput = true;
+    setAcceptingInput(true);
     setMessage("yourTurn");
   }
 
@@ -367,7 +373,7 @@
   }
 
   function onWrongPress() {
-    acceptingInput = false;
+    setAcceptingInput(false);
     awaitingRepeat = true;
     playerStep = 0;
     setBoardEnabled(false);
@@ -406,7 +412,7 @@
       playCorrectTone(index);
     }
     if (playerStep === sequence.length) {
-      acceptingInput = false;
+      setAcceptingInput(false);
       setBoardEnabled(false);
       setRepeatEnabled(false);
       playSuccess();

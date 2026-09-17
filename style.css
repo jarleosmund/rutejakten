@@ -463,6 +463,14 @@ body {
   border: 2px solid var(--line);
   border-radius: var(--r-xl);
   box-shadow: var(--shadow-lg);
+  transition: border-color 0.2s ease;
+}
+
+/* Player's turn: the board frame turns green while input is accepted
+   (mirrors the "yourTurn"/acceptingInput state), so it's clear at a
+   glance when it's safe to press. */
+.board.is-your-turn {
+  border-color: var(--good);
 }
 
 .cell {
@@ -558,6 +566,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .cell,
+  .board,
   .pref-btn,
   .settings-toggle,
   .intro-toggle,
