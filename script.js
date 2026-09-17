@@ -4,6 +4,8 @@
   const GAP_MS = 280;
   const PAUSE_BEFORE_MS = 700;
   const PAUSE_AFTER_MS = 450;
+  const FREE_TRY_AGAIN = 3;
+  const TRY_AGAIN_COST = 2;
   const LANG_KEY = "rutejakten-lang";
   const THEME_KEY = "rutejakten-theme";
   const SOUND_KEY = "rutejakten-sound";
@@ -17,17 +19,17 @@
       title: "Rutejakten",
       heading: "Rutejakten",
       intro:
-        "Et rutenett viser en kort sekvens av ruter som lyser opp, én om gangen. Trykk rutene i samme rekkefølge. Klarer du det, får du poeng og sekvensen blir én rute lengre. Trykker du feil, låses brettet – trykk «Gjenta» for å se sekvensen igjen, det koster ett poeng (poengsummen kan bli negativ). Ingen tidsfrist. Du kan også spille med tallene 1–9 på tastaturet (samme plassering som på numerisk tastatur) eller med QWE/ASD/ZXC.",
+        "Et rutenett viser en kort sekvens av ruter som lyser opp, én om gangen. Trykk rutene i samme rekkefølge. Klarer du det, får du poeng og sekvensen blir én rute lengre. Trykker du feil, låses brettet – trykk «Prøv igjen» for å se samme sekvens på nytt. De tre første trykkene på «Prøv igjen» per nivå er gratis; fra og med det fjerde trykket trekkes 2 poeng (poengsummen kan bli negativ). Ingen tidsfrist. Du kan også spille med tallene 1–9 på tastaturet (samme plassering som på numerisk tastatur) eller med QWE/ASD/ZXC.",
       level: "Nivå",
       score: "Poeng",
       restart: "Start på nytt",
-      repeat: "Gjenta",
+      repeat: "Prøv igjen",
       idle: "Trykk «Start på nytt» for å begynne.",
       watch: "Se på sekvensen.",
       yourTurn: "Din tur. Trykk rutene i samme rekkefølge.",
       correct: "Riktig!",
       correctNext: "Riktig! Se den nye, lengre sekvensen.",
-      wrong: "Feil. Trykk «Gjenta» for å se sekvensen igjen.",
+      wrong: "Feil. Trykk «Prøv igjen» for å se sekvensen igjen.",
       statusAria: "Spillstatus",
       boardAria: "Rutenett",
       tile: "Rute",
@@ -46,17 +48,17 @@
       title: "Grid Hunt",
       heading: "Grid Hunt",
       intro:
-        "A grid shows a short sequence of tiles lighting up, one at a time. Press the tiles in the same order. Get it right and you score a point, with the sequence growing by one tile. Get it wrong and the board locks — press “Repeat” to see the sequence again, which costs a point (your score can go negative). No time limit. You can also play with the number keys 1–9 (same layout as a numeric keypad) or with QWE/ASD/ZXC.",
+        "A grid shows a short sequence of tiles lighting up, one at a time. Press the tiles in the same order. Get it right and you score a point, with the sequence growing by one tile. Get it wrong and the board locks — press “Try again” to see the same sequence again. The first three “Try again” presses on each level are free; from the fourth press onward, each costs 2 points (your score can go negative). No time limit. You can also play with the number keys 1–9 (same layout as a numeric keypad) or with QWE/ASD/ZXC.",
       level: "Level",
       score: "Score",
       restart: "Restart",
-      repeat: "Repeat",
+      repeat: "Try again",
       idle: "Press “Restart” to begin.",
       watch: "Watch the sequence.",
       yourTurn: "Your turn. Press the tiles in the same order.",
       correct: "Correct!",
       correctNext: "Correct! Watch the new, longer sequence.",
-      wrong: "Wrong. Press “Repeat” to see the sequence again.",
+      wrong: "Wrong. Press “Try again” to see the sequence again.",
       statusAria: "Game status",
       boardAria: "Grid",
       tile: "Tile",
@@ -102,6 +104,7 @@
   let score = 0;
   let acceptingInput = false;
   let awaitingRepeat = false;
+  let tryAgainCount = 0;
   let roundToken = 0;
 
   function delay(ms) {
@@ -301,6 +304,7 @@
     score = 0;
     acceptingInput = false;
     awaitingRepeat = false;
+    tryAgainCount = 0;
     for (let i = 0; i < START_LENGTH; i += 1) {
       growSequence();
     }
@@ -357,6 +361,7 @@
   function onCorrectRound() {
     score += 1;
     growSequence();
+    tryAgainCount = 0;
     updateStats();
     playSequence("correctNext");
   }
@@ -374,7 +379,10 @@
     if (!acceptingInput && !awaitingRepeat) {
       return;
     }
-    score -= 1;
+    tryAgainCount += 1;
+    if (tryAgainCount > FREE_TRY_AGAIN) {
+      score -= TRY_AGAIN_COST;
+    }
     updateStats();
     playSequence("watch");
   }
