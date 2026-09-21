@@ -1,9 +1,9 @@
 (function () {
   const START_LENGTH = 2;
-  const FLASH_MS = 650;
-  const GAP_MS = 280;
-  const PAUSE_BEFORE_MS = 700;
-  const PAUSE_AFTER_MS = 450;
+  const FLASH_MS = 380;
+  const GAP_MS = 140;
+  const PAUSE_BEFORE_MS = 350;
+  const PAUSE_AFTER_MS = 220;
   const FREE_TRY_AGAIN = 3;
   const TRY_AGAIN_COST = 2;
   const LANG_KEY = "rutejakten-lang";
@@ -399,7 +399,7 @@
     }
 
     const token = roundToken;
-    flashCell(index, "is-press", 180);
+    flashCell(index, "is-press", 110);
 
     if (index !== sequence[playerStep]) {
       playWrong();
@@ -417,7 +417,7 @@
       setRepeatEnabled(false);
       playSuccess();
       setMessage("correct", "is-good");
-      await delay(500);
+      await delay(300);
       if (token !== roundToken) {
         return;
       }
