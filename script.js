@@ -9,7 +9,7 @@
   const LANG_KEY = "rutejakten-lang";
   const THEME_KEY = "rutejakten-theme";
   const SOUND_KEY = "rutejakten-sound";
-  const INTRO_KEY = "rutejakten-intro";
+  const HELP_SEEN_KEY = "rutejakten-help-seen";
   const CELL_FREQS = [
     440.0, 523.25, 587.33, 293.66, 329.63, 392.0, 196.0, 220.0, 261.63,
   ];
@@ -18,13 +18,20 @@
     no: {
       title: "Rutejakten",
       heading: "Rutejakten",
-      intro:
-        "Et rutenett viser en kort sekvens av ruter som lyser opp, én om gangen. Trykk rutene i samme rekkefølge. Klarer du det, får du poeng og sekvensen blir én rute lengre. Trykker du feil, låses brettet – trykk «Prøv igjen» for å se samme sekvens på nytt. De tre første trykkene på «Prøv igjen» per nivå er gratis; fra og med det fjerde trykket trekkes 2 poeng (poengsummen kan bli negativ). Ingen tidsfrist. Du kan også spille med tallene 1–9 på tastaturet (samme plassering som på numerisk tastatur) eller med QWE/ASD/ZXC.",
+      helpTitle: "Slik spiller du",
+      help1: "Se rutene lyse opp, én om gangen.",
+      help2: "Når kanten rundt brettet blir grønn, trykker du rutene i samme rekkefølge.",
+      help3: "Riktig: +1 poeng, og sekvensen blir én rute lengre.",
+      help4: "Feil: brettet låses. Trykk «Prøv igjen» for å se samme sekvens på nytt. De tre første forsøkene per nivå er gratis – deretter koster hvert forsøk 2 poeng (poengsummen kan bli negativ).",
+      help5: "Ingen tidsfrist. Spill med mus, berøring, talltastene 1–9 (samme plassering som numerisk tastatur) eller QWE / ASD / ZXC.",
+      gotIt: "Den er grei",
       level: "Nivå",
       score: "Poeng",
+      start: "Start",
       restart: "Start på nytt",
       repeat: "Prøv igjen",
-      idle: "Trykk «Start på nytt» for å begynne.",
+      free: "gratis",
+      idle: "Trykk «Start» for å begynne.",
       watch: "Se på sekvensen.",
       yourTurn: "Din tur. Trykk rutene i samme rekkefølge.",
       correct: "Riktig!",
@@ -42,18 +49,24 @@
       soundOff: "Lyd av",
       prefsAria: "Språk og utseende",
       settings: "Innstillinger",
-      howToPlay: "Hvordan spille?",
     },
     en: {
       title: "Grid Hunt",
       heading: "Grid Hunt",
-      intro:
-        "A grid shows a short sequence of tiles lighting up, one at a time. Press the tiles in the same order. Get it right and you score a point, with the sequence growing by one tile. Get it wrong and the board locks — press “Try again” to see the same sequence again. The first three “Try again” presses on each level are free; from the fourth press onward, each costs 2 points (your score can go negative). No time limit. You can also play with the number keys 1–9 (same layout as a numeric keypad) or with QWE/ASD/ZXC.",
+      helpTitle: "How to play",
+      help1: "Watch the tiles light up, one at a time.",
+      help2: "When the border around the board turns green, press the tiles in the same order.",
+      help3: "Get it right: +1 point, and the sequence grows by one tile.",
+      help4: "Get it wrong: the board locks. Press “Try again” to see the same sequence again. The first three tries on each level are free — after that each one costs 2 points (your score can go negative).",
+      help5: "No time limit. Play with the mouse, touch, the number keys 1–9 (same layout as a numeric keypad) or QWE / ASD / ZXC.",
+      gotIt: "Got it",
       level: "Level",
       score: "Score",
+      start: "Start",
       restart: "Restart",
       repeat: "Try again",
-      idle: "Press “Restart” to begin.",
+      free: "free",
+      idle: "Press “Start” to begin.",
       watch: "Watch the sequence.",
       yourTurn: "Your turn. Press the tiles in the same order.",
       correct: "Correct!",
@@ -71,7 +84,6 @@
       soundOff: "Sound off",
       prefsAria: "Language and appearance",
       settings: "Settings",
-      howToPlay: "How to play?",
     },
   };
 
@@ -89,13 +101,16 @@
   const soundToggleBtn = document.getElementById("sound-toggle");
   const settingsToggleBtn = document.getElementById("settings-toggle");
   const settingsPanel = document.getElementById("settings-panel");
-  const introToggleBtn = document.getElementById("intro-toggle");
-  const introText = document.getElementById("intro-text");
+  const restartLabel = document.getElementById("restart-label");
+  const repeatCostEl = document.getElementById("repeat-cost");
+  const progressEl = document.getElementById("progress");
+  const helpDialog = document.getElementById("help");
+  const helpOpenBtn = document.getElementById("help-open");
 
   let lang = "no";
   let theme = "dark";
   let soundOn = true;
-  let introOpen = false;
+  let started = false;
   let audioCtx = null;
   let masterGain = null;
   let messageKey = "idle";
@@ -156,6 +171,8 @@
     setPressed(langNoBtn, lang === "no");
     setPressed(langEnBtn, lang === "en");
     updateSoundButton();
+    updateRestartButton();
+    updateRepeatCost();
     setMessage(messageKey, messageKind);
   }
 
@@ -175,11 +192,61 @@
     setPressed(soundToggleBtn, soundOn);
   }
 
-  function applyIntro(next) {
-    introOpen = next === "open";
-    writeStore(INTRO_KEY, introOpen ? "open" : "closed");
-    introText.hidden = !introOpen;
-    introToggleBtn.setAttribute("aria-expanded", introOpen ? "true" : "false");
+  function openHelp() {
+    closeSettings();
+    if (typeof helpDialog.showModal === "function") {
+      helpDialog.showModal();
+    } else {
+      helpDialog.setAttribute("open", "");
+    }
+    writeStore(HELP_SEEN_KEY, "yes");
+  }
+
+  function updateRestartButton() {
+    restartLabel.textContent = t(started ? "restart" : "start");
+    restartBtn.classList.toggle("is-started", started);
+  }
+
+  function updateRepeatCost() {
+    const freeLeft = FREE_TRY_AGAIN - tryAgainCount;
+    const paid = freeLeft <= 0;
+    repeatCostEl.textContent = paid
+      ? "−" + TRY_AGAIN_COST
+      : freeLeft + " " + t("free");
+    repeatCostEl.classList.toggle("is-cost", paid);
+  }
+
+  // Dots under the message: one per step in the sequence. While watching
+  // they fill as tiles light up; on the player's turn they track progress.
+  function renderProgress(done, current, wrongAt) {
+    const total = sequence.length;
+    while (progressEl.children.length < total) {
+      const dot = document.createElement("span");
+      dot.className = "dot";
+      progressEl.appendChild(dot);
+    }
+    while (progressEl.children.length > total) {
+      progressEl.lastChild.remove();
+    }
+    Array.prototype.forEach.call(progressEl.children, function (dot, i) {
+      dot.classList.toggle("is-done", i < done);
+      dot.classList.toggle("is-current", i === current);
+      dot.classList.toggle("is-wrong", i === wrongAt);
+    });
+  }
+
+  function bump(el) {
+    el.classList.remove("is-bump");
+    void el.offsetWidth;
+    el.classList.add("is-bump");
+  }
+
+  function setBoardFeedback(kind) {
+    boardEl.classList.remove("is-wrong", "is-correct");
+    if (kind) {
+      void boardEl.offsetWidth;
+      boardEl.classList.add(kind);
+    }
   }
 
   function applySound(next) {
@@ -286,6 +353,7 @@
 
   function setRepeatEnabled(enabled) {
     repeatBtn.disabled = !enabled;
+    repeatBtn.classList.toggle("is-needed", enabled && awaitingRepeat);
   }
 
   function clearCellStates() {
@@ -311,9 +379,12 @@
     setAcceptingInput(false);
     awaitingRepeat = false;
     tryAgainCount = 0;
+    started = true;
     for (let i = 0; i < START_LENGTH; i += 1) {
       growSequence();
     }
+    updateRestartButton();
+    updateRepeatCost();
     updateStats();
     playSequence("watch");
   }
@@ -333,8 +404,10 @@
     setBoardEnabled(false);
     setRepeatEnabled(false);
     clearCellStates();
+    setBoardFeedback(null);
     setMessage(key || "watch", kind);
     updateStats();
+    renderProgress(0, -1, -1);
 
     await delay(PAUSE_BEFORE_MS);
     if (token !== roundToken) {
@@ -342,6 +415,7 @@
     }
 
     for (let i = 0; i < sequence.length; i += 1) {
+      renderProgress(i + 1, -1, -1);
       playCellTone(sequence[i]);
       await flashCell(sequence[i], "is-lit", FLASH_MS);
       if (token !== roundToken) {
@@ -361,6 +435,7 @@
     setBoardEnabled(true);
     setRepeatEnabled(true);
     setAcceptingInput(true);
+    renderProgress(0, 0, -1);
     setMessage("yourTurn");
   }
 
@@ -368,16 +443,21 @@
     score += 1;
     growSequence();
     tryAgainCount = 0;
+    updateRepeatCost();
     updateStats();
+    bump(scoreEl);
+    bump(levelEl);
     playSequence("correctNext");
   }
 
   function onWrongPress() {
     setAcceptingInput(false);
     awaitingRepeat = true;
+    renderProgress(playerStep, -1, playerStep);
     playerStep = 0;
     setBoardEnabled(false);
     setRepeatEnabled(true);
+    setBoardFeedback("is-wrong");
     setMessage("wrong", "is-warn");
   }
 
@@ -388,7 +468,9 @@
     tryAgainCount += 1;
     if (tryAgainCount > FREE_TRY_AGAIN) {
       score -= TRY_AGAIN_COST;
+      bump(scoreEl);
     }
+    updateRepeatCost();
     updateStats();
     playSequence("watch");
   }
@@ -408,6 +490,7 @@
     }
 
     playerStep += 1;
+    renderProgress(playerStep, playerStep, -1);
     if (playerStep !== sequence.length) {
       playCorrectTone(index);
     }
@@ -416,6 +499,7 @@
       setBoardEnabled(false);
       setRepeatEnabled(false);
       playSuccess();
+      setBoardFeedback("is-correct");
       setMessage("correct", "is-good");
       await delay(300);
       if (token !== roundToken) {
@@ -500,6 +584,9 @@
     if (event.repeat || event.ctrlKey || event.altKey || event.metaKey) {
       return;
     }
+    if (helpDialog.open) {
+      return;
+    }
     const index = indexFromKey(event);
     if (index === null) {
       return;
@@ -543,8 +630,13 @@
     }
   });
 
-  introToggleBtn.addEventListener("click", function () {
-    applyIntro(introOpen ? "closed" : "open");
+  helpOpenBtn.addEventListener("click", openHelp);
+
+  // Clicking the dimmed backdrop (outside the dialog box) closes it.
+  helpDialog.addEventListener("click", function (event) {
+    if (event.target === helpDialog) {
+      helpDialog.close();
+    }
   });
 
   restartBtn.addEventListener("click", startGame);
@@ -571,8 +663,10 @@
   applyTheme(readStore(THEME_KEY, "dark"));
   applyLanguage(readStore(LANG_KEY, "en"));
   applySound(readStore(SOUND_KEY, "on"));
-  applyIntro(readStore(INTRO_KEY, "closed"));
   setBoardEnabled(false);
   setRepeatEnabled(false);
   updateStats();
+  if (readStore(HELP_SEEN_KEY, "") !== "yes") {
+    openHelp();
+  }
 })();

@@ -8,8 +8,10 @@
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%231f6b45'/%3E%3Cg fill='%23fffdf8'%3E%3Crect x='4' y='4' width='6' height='6' rx='1.4'/%3E%3Crect x='14' y='4' width='6' height='6' rx='1.4' opacity='.55'/%3E%3Crect x='4' y='14' width='6' height='6' rx='1.4' opacity='.55'/%3E%3Crect x='14' y='14' width='6' height='6' rx='1.4' opacity='.55'/%3E%3C/g%3E%3C/svg%3E"
     />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f4efe3" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0d1310" />
+    <!-- The game has its own dark theme; ask Dark Reader not to re-color it. -->
+    <meta name="darkreader-lock" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3eee3" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0c110e" />
     <script>
       (function () {
         try {
@@ -27,132 +29,93 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <main class="page">
-      <div class="top">
-        <header class="intro">
-          <h1 data-i18n="heading">Grid Hunt</h1>
-          <button
-            type="button"
-            id="intro-toggle"
-            class="intro-toggle"
-            aria-expanded="false"
-            aria-controls="intro-text"
-          >
-            <span class="intro-toggle-label" data-i18n="howToPlay">How to play?</span>
-            <span class="intro-toggle-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"></path></svg>
+    <main class="app">
+      <div class="side">
+        <header class="topbar">
+          <div class="brand">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><rect x="3" y="3" width="8" height="8" rx="2"></rect><rect x="13" y="3" width="8" height="8" rx="2" opacity=".45"></rect><rect x="3" y="13" width="8" height="8" rx="2" opacity=".45"></rect><rect x="13" y="13" width="8" height="8" rx="2" opacity=".45"></rect></svg>
             </span>
-          </button>
-          <p id="intro-text" data-i18n="intro" hidden>
-            A grid shows a short sequence of tiles lighting up, one at a
-            time. Press the tiles in the same order. Get it right and you
-            score a point, with the sequence growing by one tile. Get it
-            wrong and the board locks — press “Try again” to see the same
-            sequence again. The first three “Try again” presses on each
-            level are free; from the fourth press onward, each costs 2
-            points (your score can go negative). No time limit. You can
-            also play with the number keys 1–9 (same layout as a numeric
-            keypad) or with QWE/ASD/ZXC.
-          </p>
-        </header>
+            <h1 data-i18n="heading">Grid Hunt</h1>
+          </div>
 
-        <div class="settings">
-          <button
-            type="button"
-            id="settings-toggle"
-            class="settings-toggle"
-            aria-haspopup="true"
-            aria-expanded="false"
-            aria-controls="settings-panel"
-            data-i18n-aria="settings"
-          >
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" stroke="none">
-              <circle cx="12" cy="12" r="3.4"></circle>
-              <rect x="10.6" y="1.5" width="2.8" height="4" rx="1"></rect>
-              <rect x="10.6" y="18.5" width="2.8" height="4" rx="1"></rect>
-              <rect x="1.5" y="10.6" width="4" height="2.8" rx="1"></rect>
-              <rect x="18.5" y="10.6" width="4" height="2.8" rx="1"></rect>
-              <rect x="10.6" y="1.5" width="2.8" height="4" rx="1" transform="rotate(45 12 12)"></rect>
-              <rect x="10.6" y="18.5" width="2.8" height="4" rx="1" transform="rotate(45 12 12)"></rect>
-              <rect x="1.5" y="10.6" width="4" height="2.8" rx="1" transform="rotate(45 12 12)"></rect>
-              <rect x="18.5" y="10.6" width="4" height="2.8" rx="1" transform="rotate(45 12 12)"></rect>
-            </svg>
-          </button>
+          <div class="topbar-actions">
+            <button type="button" id="help-open" class="icon-btn" data-i18n-aria="helpTitle">
+              <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"></circle><path d="M9.3 9.2a2.8 2.8 0 0 1 5.4 1c0 1.9-2.7 2.5-2.7 4"></path><circle cx="12" cy="17.6" r="0.4" fill="currentColor"></circle></svg>
+            </button>
 
-          <div
-            id="settings-panel"
-            class="settings-panel"
-            role="menu"
-            data-i18n-aria="prefsAria"
-            hidden
-          >
-            <div class="pref-group" role="group" data-i18n-aria="langGroup">
-              <button type="button" id="lang-no" class="pref-btn" aria-pressed="false">
-                NO
+            <div class="settings">
+              <button
+                type="button"
+                id="settings-toggle"
+                class="icon-btn"
+                aria-expanded="false"
+                aria-controls="settings-panel"
+                data-i18n-aria="settings"
+              >
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"></path><circle cx="16" cy="6" r="2"></circle><circle cx="10" cy="12" r="2"></circle><circle cx="18" cy="18" r="2"></circle></svg>
               </button>
-              <button type="button" id="lang-en" class="pref-btn" aria-pressed="true">
-                EN
-              </button>
-            </div>
-            <div class="pref-group" role="group" data-i18n-aria="themeGroup">
-              <button type="button" id="theme-light" class="pref-btn" aria-pressed="false">
-                <span class="pref-btn-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2.2M12 19.8V22M4.93 4.93l1.55 1.55M17.52 17.52l1.55 1.55M2 12h2.2M19.8 12H22M4.93 19.07l1.55-1.55M17.52 6.48l1.55-1.55"></path></svg>
-                </span>
-                <span class="pref-btn-label" data-i18n="light">Light</span>
-              </button>
-              <button type="button" id="theme-dark" class="pref-btn" aria-pressed="true">
-                <span class="pref-btn-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" stroke="none"><path d="M20.5 14.7A8.5 8.5 0 0 1 9.3 3.5a.75.75 0 0 0-.93-.97A10 10 0 1 0 21.47 15.6a.75.75 0 0 0-.97-.9z"></path></svg>
-                </span>
-                <span class="pref-btn-label" data-i18n="dark">Dark</span>
-              </button>
-            </div>
-            <div class="pref-group" role="group" data-i18n-aria="soundGroup">
-              <button type="button" id="sound-toggle" class="pref-btn pref-btn-sound" aria-pressed="true">
-                <span class="pref-btn-icon pref-btn-icon-on" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5v5h3.4l4.6 3.5v-12L7.4 9.5H4z"></path><path d="M16 9a4.2 4.2 0 0 1 0 6"></path><path d="M18.6 6.4a8 8 0 0 1 0 11.2"></path></svg>
-                </span>
-                <span class="pref-btn-icon pref-btn-icon-off" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5v5h3.4l4.6 3.5v-12L7.4 9.5H4z"></path><path d="M16.2 9.8l4.4 4.4M20.6 9.8l-4.4 4.4"></path></svg>
-                </span>
-                <span class="pref-btn-label">Sound on</span>
-              </button>
+
+              <div id="settings-panel" class="settings-panel" data-i18n-aria="prefsAria" hidden>
+                <p class="pref-label" data-i18n="langGroup">Language</p>
+                <div class="pref-group" role="group" data-i18n-aria="langGroup">
+                  <button type="button" id="lang-no" class="pref-btn" aria-pressed="false">Norsk</button>
+                  <button type="button" id="lang-en" class="pref-btn" aria-pressed="true">English</button>
+                </div>
+                <p class="pref-label" data-i18n="themeGroup">Appearance</p>
+                <div class="pref-group" role="group" data-i18n-aria="themeGroup">
+                  <button type="button" id="theme-light" class="pref-btn" aria-pressed="false">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2.2M12 19.8V22M4.93 4.93l1.55 1.55M17.52 17.52l1.55 1.55M2 12h2.2M19.8 12H22M4.93 19.07l1.55-1.55M17.52 6.48l1.55-1.55"></path></svg>
+                    <span data-i18n="light">Light</span>
+                  </button>
+                  <button type="button" id="theme-dark" class="pref-btn" aria-pressed="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true"><path d="M20.5 14.7A8.5 8.5 0 0 1 9.3 3.5a.75.75 0 0 0-.93-.97A10 10 0 1 0 21.47 15.6a.75.75 0 0 0-.97-.9z"></path></svg>
+                    <span data-i18n="dark">Dark</span>
+                  </button>
+                </div>
+                <p class="pref-label" data-i18n="soundGroup">Sound</p>
+                <div class="pref-group" role="group" data-i18n-aria="soundGroup">
+                  <button type="button" id="sound-toggle" class="pref-btn" aria-pressed="true">
+                    <svg class="icon-on" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.4l4.6 3.5v-12L7.4 9.5H4z"></path><path d="M16 9a4.2 4.2 0 0 1 0 6"></path><path d="M18.6 6.4a8 8 0 0 1 0 11.2"></path></svg>
+                    <svg class="icon-off" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.4l4.6 3.5v-12L7.4 9.5H4z"></path><path d="M16.2 9.8l4.4 4.4M20.6 9.8l-4.4 4.4"></path></svg>
+                    <span class="pref-btn-label">Sound on</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
+        </header>
+
+        <section class="hud" data-i18n-aria="statusAria">
+          <div class="stats">
+            <p class="stat">
+              <span class="stat-label" data-i18n="level">Level</span>
+              <strong id="level">1</strong>
+            </p>
+            <p class="stat">
+              <span class="stat-label" data-i18n="score">Score</span>
+              <strong id="score">0</strong>
+            </p>
+          </div>
+          <div class="actions">
+            <button type="button" id="restart" class="btn btn-primary">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true" class="icon-play"><path d="M8 5.2v13.6a1 1 0 0 0 1.5.86l11-6.8a1 1 0 0 0 0-1.72l-11-6.8A1 1 0 0 0 8 5.2z"></path></svg>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="icon-restart"><path d="M20 11A8 8 0 1 0 18.5 16.5"></path><path d="M20 4.5V11h-6.5"></path></svg>
+              <span id="restart-label">Start</span>
+            </button>
+            <button type="button" id="repeat" class="btn btn-secondary" disabled>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12a7.5 7.5 0 0 1 12.7-5.4L19 9"></path><path d="M19.5 4v5h-5"></path><path d="M19.5 12a7.5 7.5 0 0 1-12.7 5.4L5 15"></path><path d="M4.5 20v-5h5"></path></svg>
+              <span data-i18n="repeat">Try again</span>
+              <span id="repeat-cost" class="badge">3 free</span>
+            </button>
+          </div>
+        </section>
+
+        <div class="status">
+          <p id="message" class="message" role="status" aria-live="polite">Press “Start” to begin.</p>
+          <div id="progress" class="progress" aria-hidden="true"></div>
         </div>
       </div>
-
-      <section class="panel" data-i18n-aria="statusAria">
-        <div class="stats">
-          <p class="stat">
-            <span data-i18n="level">Level</span>
-            <strong id="level">1</strong>
-          </p>
-          <p class="stat">
-            <span data-i18n="score">Score</span>
-            <strong id="score">0</strong>
-          </p>
-        </div>
-        <div class="actions">
-          <button type="button" id="restart" class="restart">
-            <span class="restart-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11A8 8 0 1 0 18.5 16.5"></path><path d="M20 4.5V11h-6.5"></path></svg>
-            </span>
-            <span class="pref-btn-label" data-i18n="restart">Restart</span>
-          </button>
-          <button type="button" id="repeat" class="repeat" disabled>
-            <span class="repeat-icon" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12a7.5 7.5 0 0 1 12.7-5.4L19 9"></path><path d="M19.5 4v5h-5"></path><path d="M19.5 12a7.5 7.5 0 0 1-12.7 5.4L5 15"></path><path d="M4.5 20v-5h5"></path></svg>
-            </span>
-            <span class="pref-btn-label" data-i18n="repeat">Try again</span>
-          </button>
-        </div>
-      </section>
-
-      <p id="message" class="message" role="status" aria-live="polite">
-        Press “Restart” to begin.
-      </p>
 
       <div class="board-area">
         <section class="board" data-i18n-aria="boardAria">
@@ -168,6 +131,20 @@
         </section>
       </div>
     </main>
+
+    <dialog id="help" class="help" aria-labelledby="help-title">
+      <form method="dialog" class="help-inner">
+        <h2 id="help-title" data-i18n="helpTitle">How to play</h2>
+        <ol class="help-steps">
+          <li data-i18n="help1"></li>
+          <li data-i18n="help2"></li>
+          <li data-i18n="help3"></li>
+          <li data-i18n="help4"></li>
+        </ol>
+        <p class="help-note" data-i18n="help5"></p>
+        <button type="submit" class="btn btn-primary help-close" data-i18n="gotIt" autofocus>Got it</button>
+      </form>
+    </dialog>
 
     <script src="script.js"></script>
   </body>

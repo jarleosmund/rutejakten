@@ -30,15 +30,20 @@ python3 -m http.server 8000
 ## Features
 
 - 3×3 sequence-memory gameplay, no timer
-- One small settings button (top right) opens a panel with language
-  (Norwegian/English), theme (light/dark) and sound controls — kept out of
-  the way until you want them
-- Defaults to dark theme, English, sound on; saved choices override these
-  on your next visit via `localStorage`
+- Adaptive layout: on phones held upright the stats sit on top, the board
+  fills the middle and the buttons sit at the bottom within thumb reach; on
+  landscape screens (laptops, tablets, phones on their side) the controls
+  move to a sidebar and the board uses the full height
+- Progress dots show how far you are in the sequence, and the board frame
+  turns green on your turn, orange (with a small shake) on a wrong press
+- The “Try again” button shows how many free tries are left on the level,
+  or the point cost once they're used up
+- “How to play” opens as a dialog (shown automatically on the first visit)
+- Settings (top right) for language (Norwegian/English), theme (light/dark)
+  and sound — saved in `localStorage`
 - Gentle audio feedback — soft bell-like tones on a pentatonic scale, no
   harsh beeps
-- Responsive, compact layout — the whole board fits on screen without
-  scrolling, on both mobile and desktop
+- Respects `prefers-reduced-motion`
 
 ## Project structure
 

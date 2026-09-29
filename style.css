@@ -1,62 +1,74 @@
+/* ---------- theme tokens ---------- */
+
 :root,
 html[data-theme="light"] {
   color-scheme: light;
-  --bg: #f4efe3;
-  --bg-soft: #ebe3d1;
-  --paper: #fffdf8;
-  --ink: #1b241c;
-  --muted: #3a453c;
-  --line: #26362a;
-  --line-soft: #d6ddd1;
-  --cell: #eaf0e7;
-  --cell-hover: #d9e6d6;
-  --lit: #1f6b45;
-  --lit-glow: rgba(31, 107, 69, 0.32);
-  --lit-ink: #fffdf8;
-  --press: #4d7c5c;
-  --good: #215c3a;
-  --warn: #8a3b1d;
+  --bg: #f3eee3;
+  --bg-glow: #fbf8f1;
+  --surface: #fffdf8;
+  --surface-2: #f5f0e5;
+  --ink: #18221b;
+  --muted: #4a574d;
+  --line: #ddd5c3;
+  --line-strong: #2a372d;
+  --cell: #edf2e9;
+  --cell-top: #f7faf5;
+  --cell-border: #b9c6b5;
+  --cell-edge: #a9b7a4;
+  --cell-ink: #3f4c42;
+  --accent: #1f6b45;
+  --accent-hover: #18573a;
+  --accent-ink: #ffffff;
+  --accent-soft: rgba(31, 107, 69, 0.14);
+  --accent-glow: rgba(31, 107, 69, 0.35);
+  --press: #3d7a55;
+  --warn: #a2391a;
+  --warn-soft: rgba(162, 57, 26, 0.12);
   --focus: #1f6b45;
-  --shadow-sm: 0 2px 6px rgba(27, 36, 28, 0.10);
-  --shadow-md: 0 10px 24px rgba(27, 36, 28, 0.12);
-  --shadow-lg: 0 18px 40px rgba(27, 36, 28, 0.16);
+  --shadow-sm: 0 1px 2px rgba(24, 34, 27, 0.08), 0 2px 6px rgba(24, 34, 27, 0.06);
+  --shadow-md: 0 4px 14px rgba(24, 34, 27, 0.09);
+  --shadow-lg: 0 18px 44px rgba(24, 34, 27, 0.14);
 }
 
 html[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #0d1310;
-  --bg-soft: #141d16;
-  --paper: #1a231b;
-  --ink: #f6f3ea;
-  --muted: #ccd5c9;
-  --line: #dbe6da;
-  --line-soft: #33412f;
-  --cell: #131b14;
-  --cell-hover: #243126;
-  --lit: #57e996;
-  --lit-glow: rgba(87, 233, 150, 0.35);
-  --lit-ink: #05170c;
-  --press: #8effbb;
-  --good: #86f2ac;
-  --warn: #ffb089;
-  --focus: #57e996;
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.35);
-  --shadow-md: 0 10px 26px rgba(0, 0, 0, 0.42);
-  --shadow-lg: 0 20px 48px rgba(0, 0, 0, 0.55);
+  --bg: #0c110e;
+  --bg-glow: #16211a;
+  --surface: #141c16;
+  --surface-2: #1a241c;
+  --ink: #f3f1ea;
+  --muted: #b3bfb1;
+  --line: #2a372d;
+  --line-strong: #d5e0d3;
+  --cell: #1c261e;
+  --cell-top: #243026;
+  --cell-border: #34443a;
+  --cell-edge: #070b08;
+  --cell-ink: #a7b6a9;
+  --accent: #5fe39a;
+  --accent-hover: #86efb4;
+  --accent-ink: #04170b;
+  --accent-soft: rgba(95, 227, 154, 0.14);
+  --accent-glow: rgba(95, 227, 154, 0.4);
+  --press: #3fb877;
+  --warn: #ffa47d;
+  --warn-soft: rgba(255, 164, 125, 0.14);
+  --focus: #5fe39a;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 8px rgba(0, 0, 0, 0.25);
+  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 22px 56px rgba(0, 0, 0, 0.55);
 }
 
 :root {
-  --sp-1: 0.25rem;
-  --sp-2: 0.5rem;
-  --sp-3: 0.75rem;
-  --sp-4: 1rem;
-  --sp-5: 1.5rem;
-  --sp-6: 2rem;
   --r-sm: 0.6rem;
-  --r-md: 0.85rem;
-  --r-lg: 1.1rem;
-  --r-xl: 1.4rem;
+  --r-md: 0.9rem;
+  --r-lg: 1.25rem;
+  --r-xl: 1.6rem;
+  --tap: 3rem;
+  --gutter: max(1rem, env(safe-area-inset-left, 0px));
 }
+
+/* ---------- base ---------- */
 
 * {
   box-sizing: border-box;
@@ -65,81 +77,165 @@ html[data-theme="dark"] {
 html,
 body {
   margin: 0;
-  min-height: 100%;
 }
 
 body {
-  font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial,
-    sans-serif;
-  background: var(--bg);
+  min-height: 100vh;
+  min-height: 100dvh;
+  font-family: ui-rounded, "SF Pro Rounded", system-ui, -apple-system,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  background-color: var(--bg);
   background-image: radial-gradient(
-    circle at 50% -12%,
-    var(--bg-soft),
-    var(--bg) 62%
+    ellipse 90% 60% at 50% 0%,
+    var(--bg-glow),
+    var(--bg) 70%
   );
   background-attachment: fixed;
   color: var(--ink);
   line-height: 1.45;
   -webkit-font-smoothing: antialiased;
-  /* Safety net: the board sizes itself fluidly to the available space and
-     should never need this, but if content ever exceeds the viewport
-     (extreme aspect ratios, very large text zoom, …) we scroll the page
-     rather than clip or crush the board below a usable size. */
-  overflow-y: auto;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.page {
-  width: min(42rem, calc(100% - 1.6rem));
-  margin: 0 auto;
-  padding: 0.7rem 0 calc(1.4rem + env(safe-area-inset-bottom, 0px));
+button {
+  font: inherit;
+  color: inherit;
+}
+
+svg {
+  display: block;
+  flex: none;
+}
+
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+
+/* ---------- page layout ----------
+ *
+ * Portrait / narrow: title and stats on top, board in the middle taking
+ * whatever height is left, message and buttons at the bottom within thumb
+ * reach. .side and .hud dissolve (display: contents) so their children can
+ * be placed on the page grid individually.
+ * Landscape (wider than tall, see media query at the bottom): the controls
+ * become a sidebar and the board fills the full height beside it — this is
+ * what lets phones in landscape and laptop windows use the space well.
+ *
+ * .board-area is a size container, so the board can pick the largest
+ * square that fits both its width and height (cqw / cqh), no magic numbers.
+ */
+
+.app {
+  width: min(38rem, 100% - 2 * var(--gutter));
   min-height: 100vh;
   min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0.6rem;
+  margin-inline: auto;
+  padding-top: max(0.75rem, env(safe-area-inset-top, 0px));
+  padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(15rem, 1fr) auto auto;
+  grid-template-areas: "top" "stats" "board" "status" "actions";
+  gap: 0.75rem;
 }
 
-/* ---------- header: intro + settings ---------- */
+.side,
+.hud {
+  display: contents;
+}
 
-.top {
+.topbar {
+  grid-area: top;
+}
+
+.stats {
+  grid-area: stats;
+}
+
+.board-area {
+  grid-area: board;
+}
+
+.status {
+  grid-area: status;
+}
+
+.actions {
+  grid-area: actions;
+}
+
+/* ---------- top bar ---------- */
+
+.topbar {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  flex: none;
 }
 
-.settings {
-  position: relative;
-  flex: none;
-}
-
-.settings-toggle {
-  appearance: none;
-  display: inline-flex;
+.brand {
+  display: flex;
   align-items: center;
-  justify-content: center;
-  width: 2.9rem;
-  height: 2.9rem;
-  border: 2px solid var(--line);
+  gap: 0.6rem;
+  min-width: 0;
+}
+
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: var(--r-sm);
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 0 4px 14px var(--accent-soft);
+  flex: none;
+}
+
+.brand h1 {
+  margin: 0;
+  font-size: clamp(1.5rem, 1.2rem + 1.4vw, 1.9rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topbar-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex: none;
+}
+
+.icon-btn {
+  appearance: none;
+  display: grid;
+  place-items: center;
+  width: var(--tap);
+  height: var(--tap);
+  padding: 0;
+  border: 1.5px solid var(--line);
   border-radius: var(--r-md);
-  background: var(--paper);
+  background: var(--surface);
   color: var(--ink);
   cursor: pointer;
   box-shadow: var(--shadow-sm);
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
 
-.settings-toggle:hover,
-.settings-toggle[aria-expanded="true"] {
-  background: var(--ink);
-  color: var(--paper);
+.icon-btn:hover,
+.icon-btn[aria-expanded="true"] {
+  border-color: var(--line-strong);
+  background: var(--surface-2);
 }
 
-.settings-toggle:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 3px;
+/* ---------- settings popover ---------- */
+
+.settings {
+  position: relative;
 }
 
 .settings-panel {
@@ -147,432 +243,599 @@ body {
   top: calc(100% + 0.5rem);
   right: 0;
   z-index: 20;
+  width: min(17rem, calc(100vw - 2rem));
+  padding: 0.9rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  width: min(18rem, calc(100vw - 2.4rem));
-  padding: 0.6rem;
-  background: var(--paper);
-  border: 2px solid var(--line);
+  gap: 0.4rem;
+  background: var(--surface);
+  border: 1.5px solid var(--line);
   border-radius: var(--r-lg);
   box-shadow: var(--shadow-lg);
+  animation: pop-in 0.16s ease-out;
 }
 
 .settings-panel[hidden] {
   display: none;
 }
 
-.settings-panel .pref-group {
-  width: 100%;
+.pref-label {
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--muted);
 }
 
-.settings-panel .pref-btn {
-  flex: 1;
+.pref-label:first-child {
+  margin-top: 0;
 }
 
 .pref-group {
   display: flex;
-  border: 2px solid var(--line);
+  gap: 0.25rem;
+  padding: 0.25rem;
   border-radius: var(--r-md);
-  overflow: hidden;
-  background: var(--paper);
-  box-shadow: var(--shadow-sm);
+  background: var(--surface-2);
+  border: 1.5px solid var(--line);
 }
 
 .pref-btn {
   appearance: none;
+  flex: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  font: inherit;
+  gap: 0.45rem;
+  min-height: 2.75rem;
+  padding: 0.4rem 0.7rem;
+  border: 0;
+  border-radius: calc(var(--r-md) - 0.25rem);
+  background: transparent;
   font-size: 1rem;
   font-weight: 700;
-  min-height: 2.9rem;
-  min-width: 3.6rem;
-  padding: 0.4rem 0.8rem;
-  border: 0;
-  background: transparent;
-  color: var(--ink);
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
 }
 
-.pref-btn-icon {
-  display: inline-flex;
-  flex: none;
-  line-height: 0;
-}
-
-.pref-btn-icon svg {
-  display: block;
-}
-
-.pref-btn-icon-off {
-  display: none;
-}
-
-#sound-toggle[aria-pressed="false"] .pref-btn-icon-on {
-  display: none;
-}
-
-#sound-toggle[aria-pressed="false"] .pref-btn-icon-off {
-  display: inline-flex;
-}
-
-.pref-btn + .pref-btn {
-  border-left: 2px solid var(--line-soft);
+.pref-btn:hover:not([aria-pressed="true"]) {
+  background: var(--accent-soft);
 }
 
 .pref-btn[aria-pressed="true"] {
   background: var(--ink);
-  color: var(--paper);
-}
-
-.pref-btn:hover:not([aria-pressed="true"]),
-.pref-btn:focus-visible:not([aria-pressed="true"]) {
-  background: var(--cell-hover);
+  color: var(--surface);
+  box-shadow: var(--shadow-sm);
 }
 
 .pref-btn:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: -3px;
-  z-index: 1;
+  outline-offset: 1px;
 }
 
-.pref-btn-sound {
-  min-width: 7.4rem;
+#sound-toggle .icon-off,
+#sound-toggle[aria-pressed="false"] .icon-on {
+  display: none;
 }
 
-/* ---------- title + intro text ---------- */
-
-.intro h1 {
-  margin: 0 0 0.3rem;
-  font-size: clamp(1.7rem, 4.4vw, 2.15rem);
-  font-weight: 800;
-  letter-spacing: -0.01em;
-  line-height: 1.1;
+#sound-toggle[aria-pressed="false"] .icon-off {
+  display: block;
 }
 
-.intro-toggle {
-  appearance: none;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  margin: 0 0 0.5rem;
-  padding: 0.35rem 0.65rem;
-  min-height: 2.6rem;
-  border: 2px solid var(--line-soft);
-  border-radius: var(--r-md);
+/* Sound is a single toggle, so "off" shouldn't look selected-dark. */
+#sound-toggle[aria-pressed="false"] {
   background: transparent;
   color: var(--ink);
-  font: inherit;
-  font-size: 0.98rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  box-shadow: none;
 }
 
-.intro-toggle:hover,
-.intro-toggle:focus-visible {
-  background: var(--cell-hover);
-  border-color: var(--line);
-}
-
-.intro-toggle:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 2px;
-}
-
-.intro-toggle-icon {
-  display: inline-flex;
-  transition: transform 0.15s ease;
-}
-
-.intro-toggle[aria-expanded="true"] .intro-toggle-icon {
-  transform: rotate(180deg);
-}
-
-.intro p {
-  margin: 0;
-  font-size: clamp(1rem, 2.3vw, 1.08rem);
-  color: var(--muted);
-  max-width: 42rem;
-}
-
-/* ---------- status panel ---------- */
-
-.panel {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.85rem;
-  padding: 0.6rem 0.9rem;
-  background: var(--paper);
-  border: 2px solid var(--line);
-  border-radius: var(--r-lg);
-  box-shadow: var(--shadow-md);
-  flex: none;
-}
+/* ---------- HUD: stats + actions ---------- */
 
 .stats {
-  display: flex;
-  gap: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
 }
 
 .stat {
   margin: 0;
-  font-size: 0.98rem;
-  font-weight: 600;
+  padding: 0.55rem 0.9rem;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.stat-label {
+  font-size: 0.95rem;
+  font-weight: 700;
   color: var(--muted);
 }
 
 .stat strong {
-  display: block;
-  margin-top: 0.1rem;
-  font-size: clamp(1.5rem, 3.2vw, 1.85rem);
-  line-height: 1;
-  color: var(--ink);
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 1.85rem);
+  font-weight: 800;
+  line-height: 1.1;
   font-variant-numeric: tabular-nums;
 }
 
-.actions {
-  display: flex;
-  flex: none;
-  align-items: center;
-  gap: 0.5rem;
+.stat strong.is-bump {
+  animation: bump 0.35s ease-out;
 }
 
-.restart,
-.repeat {
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem;
+}
+
+.btn {
   appearance: none;
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  border: 2px solid var(--line);
-  font: inherit;
-  font-size: 1.02rem;
-  font-weight: 700;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: var(--tap);
   padding: 0.55rem 1rem;
+  border: 1.5px solid transparent;
   border-radius: var(--r-md);
+  font-size: 1.05rem;
+  font-weight: 750;
+  white-space: nowrap;
   cursor: pointer;
-  min-height: 2.9rem;
-  transition: background 0.15s ease, color 0.15s ease, transform 0.1s ease;
+  transition: background 0.15s ease, border-color 0.15s ease,
+    color 0.15s ease, transform 0.1s ease, opacity 0.15s ease;
 }
 
-.restart {
-  background: var(--ink);
-  color: var(--paper);
-}
-
-.repeat {
-  background: var(--paper);
-  color: var(--ink);
-}
-
-.restart-icon,
-.repeat-icon {
-  display: inline-flex;
-  line-height: 0;
-}
-
-.restart:hover {
-  background: var(--good);
-  color: var(--lit-ink);
-}
-
-.repeat:hover:not(:disabled) {
-  background: var(--cell-hover);
-}
-
-.restart:active,
-.repeat:active:not(:disabled) {
+.btn:active:not(:disabled) {
   transform: scale(0.97);
 }
 
-.restart:focus-visible,
-.repeat:focus-visible {
-  outline: 3px solid var(--focus);
-  outline-offset: 3px;
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+  box-shadow: 0 4px 14px var(--accent-soft);
 }
 
-.repeat:disabled {
-  opacity: 0.45;
+.btn-primary:hover {
+  background: var(--accent-hover);
+}
+
+.btn-secondary {
+  background: var(--surface);
+  border-color: var(--line-strong);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: var(--surface-2);
+}
+
+.btn:disabled {
+  opacity: 0.4;
   cursor: default;
+  box-shadow: none;
 }
 
-/* ---------- status message ---------- */
+/* Draws the eye to "Try again" when it's the only way forward. */
+.btn-secondary.is-needed {
+  border-color: var(--warn);
+  box-shadow: 0 0 0 4px var(--warn-soft);
+}
+
+#restart .icon-restart,
+#restart.is-started .icon-play {
+  display: none;
+}
+
+#restart.is-started .icon-restart {
+  display: block;
+}
+
+.badge {
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--ink);
+  font-size: 0.8rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.badge.is-cost {
+  background: var(--warn-soft);
+  color: var(--warn);
+}
+
+/* ---------- status line + progress dots ---------- */
+
+.status {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.45rem;
+  text-align: center;
+}
 
 .message {
-  min-height: 1.6rem;
   margin: 0;
-  font-size: clamp(1.05rem, 2.4vw, 1.18rem);
+  /* Reserve two lines so longer messages don't make the board jump. */
+  min-height: 2.7em;
+  display: grid;
+  place-items: center;
+  font-size: clamp(1.05rem, 1rem + 0.4vw, 1.2rem);
   font-weight: 700;
-  text-align: center;
-  flex: none;
+  line-height: 1.35;
+  text-wrap: balance;
 }
 
 .message.is-good {
-  color: var(--good);
+  color: var(--accent);
 }
 
 .message.is-warn {
   color: var(--warn);
 }
 
+.progress {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+  min-height: 0.7rem;
+  max-width: 100%;
+}
+
+.dot {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  border: 2px solid var(--cell-border);
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.dot.is-done {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.dot.is-current {
+  border-color: var(--accent);
+  transform: scale(1.25);
+}
+
+.dot.is-wrong {
+  background: var(--warn);
+  border-color: var(--warn);
+}
+
 /* ---------- board ---------- */
 
-/*
- * The board fills whatever vertical space is left after the header,
- * status panel and message — computed by the browser's flex layout,
- * not by hand-calibrated "100dvh - Nrem" magic numbers (those broke on
- * viewport combinations that fall between our tested breakpoints, e.g.
- * a short-but-wide laptop window).
- *
- * .board-area is a flex child with flex:1, so it always resolves to
- * exactly the remaining height, for any viewport size or intro-text
- * state. container-type:size exposes that resolved height to the
- * board itself via cqh units, so the board can pick the largest square
- * that fits both its available width (100%) and available height
- * (100cqh), capped at 34rem so it doesn't get comically large on huge
- * screens, and floored at 15rem so cells stay tappable. If that floor
- * ever can't fit (extreme window shapes), the page scrolls instead of
- * the board getting crushed — see `overflow-y: auto` on body.
- */
 .board-area {
-  flex: 1 1 0;
-  min-height: 0;
   min-width: 0;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  min-height: 0;
+  display: grid;
+  place-items: center;
   container-type: size;
 }
 
 .board {
-  width: max(15rem, min(100%, 100cqh, 34rem));
+  width: max(14rem, min(100cqw, 100cqh, 36rem));
   aspect-ratio: 1;
-  height: auto;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  gap: 0.55rem;
-  padding: 0.55rem;
-  background: var(--paper);
-  border: 2px solid var(--line);
+  gap: clamp(0.45rem, 2.2cqmin, 0.8rem);
+  padding: clamp(0.5rem, 2.6cqmin, 0.95rem);
+  background: var(--surface);
+  border: 3px solid var(--line);
   border-radius: var(--r-xl);
   box-shadow: var(--shadow-lg);
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Player's turn: the board frame turns green while input is accepted
-   (mirrors the "yourTurn"/acceptingInput state), so it's clear at a
-   glance when it's safe to press. */
+/* Player's turn: the frame turns green while input is accepted. */
 .board.is-your-turn {
-  border-color: var(--good);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 5px var(--accent-soft), var(--shadow-lg);
+}
+
+.board.is-wrong {
+  border-color: var(--warn);
+  box-shadow: 0 0 0 5px var(--warn-soft), var(--shadow-lg);
+  animation: shake 0.4s ease-in-out;
+}
+
+.board.is-correct {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 8px var(--accent-soft), var(--shadow-lg);
 }
 
 .cell {
   appearance: none;
+  position: relative;
   min-width: 0;
   min-height: 0;
-  width: 100%;
-  height: 100%;
-  border: 2px solid var(--line);
+  padding: 0;
+  border: 2px solid var(--cell-border);
   border-radius: var(--r-md);
-  background: linear-gradient(180deg, var(--cell-hover) 0%, var(--cell) 65%);
-  color: var(--ink);
-  font: inherit;
-  font-size: clamp(1.6rem, 6.2vw, 2.4rem);
+  background: linear-gradient(180deg, var(--cell-top), var(--cell));
+  color: var(--cell-ink);
+  font-size: clamp(1.4rem, 7cqmin, 2.4rem);
   font-weight: 800;
   cursor: pointer;
-  box-shadow: var(--shadow-sm);
-  transition: background 0.12s ease, color 0.12s ease, transform 0.12s ease,
-    box-shadow 0.12s ease, opacity 0.12s ease;
+  /* "Keycap" depth: a solid lower edge that collapses when pressed. */
+  box-shadow: 0 4px 0 var(--cell-edge), var(--shadow-sm);
+  transition: background 0.12s ease, color 0.12s ease, transform 0.1s ease,
+    box-shadow 0.12s ease, border-color 0.12s ease, opacity 0.2s ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .cell:hover:not(:disabled) {
-    background: var(--cell-hover);
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    border-color: var(--accent);
+    color: var(--ink);
   }
 }
 
 .cell:focus-visible {
-  outline: 4px solid var(--focus);
-  outline-offset: 3px;
+  outline-width: 4px;
 }
 
 .cell:active:not(:disabled) {
-  transform: scale(0.95);
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--cell-edge);
 }
 
 .cell:disabled {
   cursor: default;
-  opacity: 0.65;
+}
+
+.board:not(.is-your-turn) .cell:not(.is-lit):not(.is-press) {
+  opacity: 0.72;
 }
 
 .cell.is-lit {
-  background: var(--lit);
-  color: var(--lit-ink);
-  transform: scale(1.06);
-  box-shadow: 0 0 0 5px var(--lit-glow), var(--shadow-lg);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--accent-ink);
   opacity: 1;
+  transform: scale(1.04);
+  box-shadow: 0 0 0 6px var(--accent-soft), 0 0 32px var(--accent-glow);
   z-index: 1;
 }
 
 .cell.is-press {
   background: var(--press);
-  color: var(--lit-ink);
-  transform: scale(0.95);
-  box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.28);
+  border-color: var(--press);
+  color: var(--accent-ink);
   opacity: 1;
+  transform: translateY(3px);
+  box-shadow: 0 1px 0 var(--cell-edge);
 }
 
-/* ---------- responsive tuning ---------- */
+/* ---------- help dialog ---------- */
 
-@media (max-width: 640px) {
-  .page {
-    justify-content: flex-start;
-    padding-top: calc(0.5rem + env(safe-area-inset-top, 0px));
-    padding-bottom: calc(0.7rem + env(safe-area-inset-bottom, 0px));
+.help {
+  width: min(32rem, calc(100vw - 2rem));
+  max-height: calc(100dvh - 2rem);
+  padding: 0;
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-xl);
+  background: var(--surface);
+  color: var(--ink);
+  box-shadow: var(--shadow-lg);
+}
+
+.help[open] {
+  animation: pop-in 0.18s ease-out;
+}
+
+.help::backdrop {
+  background: rgba(8, 12, 9, 0.55);
+  backdrop-filter: blur(3px);
+}
+
+.help-inner {
+  padding: clamp(1.1rem, 4vw, 1.75rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.help h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+.help-steps {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.help-steps li {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0.7rem;
+  align-items: start;
+  font-size: 1.05rem;
+}
+
+.help-steps li::before {
+  content: counter(step);
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 800;
+}
+
+.help-note {
+  margin: 0;
+  padding: 0.75rem 0.9rem;
+  border-radius: var(--r-md);
+  background: var(--surface-2);
+  color: var(--muted);
+  font-size: 0.98rem;
+}
+
+.help-close {
+  align-self: stretch;
+}
+
+/* ---------- animations ---------- */
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px) scale(0.98);
   }
 }
 
-@media (max-width: 460px) {
-  .settings-panel {
-    width: min(16.5rem, calc(100vw - 2.4rem));
+@keyframes shake {
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+
+@keyframes bump {
+  40% {
+    transform: scale(1.2);
+  }
+}
+
+.stat strong {
+  display: inline-block;
+}
+
+/* ---------- responsive ---------- */
+
+/* Landscape: sidebar + full-height board. */
+@media (min-aspect-ratio: 5/4) and (min-width: 36rem) {
+  .app {
+    width: min(70rem, 100% - 2 * var(--gutter));
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    grid-template-columns: minmax(15rem, 22rem) minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    grid-template-areas: "side board";
+    column-gap: clamp(1.25rem, 4vw, 3rem);
+    padding-top: max(1rem, env(safe-area-inset-top, 0px));
   }
 
-  .panel {
+  .side {
+    grid-area: side;
+    display: flex;
     flex-direction: column;
-    align-items: stretch;
+    justify-content: center;
+    gap: clamp(0.6rem, 2.5vh, 1.25rem);
+    min-width: 0;
+  }
+
+  .hud {
+    display: grid;
     gap: 0.6rem;
   }
 
-  .stats {
-    justify-content: space-between;
+  /* Undo the portrait page-grid placement inside the sidebar. */
+  .topbar,
+  .stats,
+  .status,
+  .actions {
+    grid-area: auto;
   }
 
-  .actions,
-  .restart,
-  .repeat {
-    justify-content: center;
-    width: 100%;
+  .actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* Very short landscape (phones on their side): tighten everything. */
+@media (min-aspect-ratio: 5/4) and (max-height: 30rem) {
+  :root {
+    --tap: 2.6rem;
+  }
+
+  .app {
+    padding-top: max(0.5rem, env(safe-area-inset-top, 0px));
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
+  }
+
+  .side {
+    gap: 0.5rem;
+  }
+
+  .brand-mark {
+    width: 2.1rem;
+    height: 2.1rem;
+  }
+
+  .brand h1 {
+    font-size: 1.3rem;
+  }
+
+  .stat {
+    padding: 0.3rem 0.75rem;
+  }
+
+  .stat strong {
+    font-size: 1.35rem;
+  }
+
+  .actions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .btn {
+    padding-inline: 0.6rem;
+    font-size: 0.98rem;
+  }
+
+  .btn .badge {
+    display: none;
+  }
+
+  .message {
+    font-size: 1rem;
+  }
+}
+
+/* Very narrow phones. */
+@media (max-width: 22rem) {
+  .btn {
+    padding-inline: 0.5rem;
+    font-size: 0.98rem;
+  }
+
+  .badge {
+    display: none;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cell,
-  .board,
-  .pref-btn,
-  .settings-toggle,
-  .intro-toggle,
-  .intro-toggle-icon,
-  .restart,
-  .repeat {
-    transition: none;
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
   }
 }
